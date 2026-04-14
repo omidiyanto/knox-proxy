@@ -1,0 +1,24 @@
+# ============================================================================
+# KNOX — Dangerous Nodes Blocklist
+# ============================================================================
+# This file configures which n8n node types should be BLOCKED when users
+# submit workflow edits via JIT access (edit:<id> roles).
+#
+# DEFAULT BEHAVIOR: When this list is empty, ALL node types are allowed.
+# Only uncomment entries below if you need to restrict specific nodes.
+#
+# This file is loaded via the DANGEROUS_NODES_FILE environment variable:
+#   DANGEROUS_NODES_FILE=/app/dangerous-nodes.yaml
+#
+# You can also combine this with the DANGEROUS_NODES env var for inline entries.
+# Both sources are merged (union).
+# ============================================================================
+
+nodes: []
+  # Uncomment any of the following to block them:
+  # - n8n-nodes-base.executeCommand     # Shell command execution
+  # - n8n-nodes-base.readWriteFile      # File system read/write
+  # - n8n-nodes-base.ssh                # SSH remote execution
+  # - n8n-nodes-base.function           # Custom JavaScript execution
+  # - n8n-nodes-base.code               # Code node (JS/Python)
+  # - n8n-nodes-base.httpRequest        # Arbitrary HTTP requests (optional)

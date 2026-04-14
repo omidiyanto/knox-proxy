@@ -1,0 +1,317 @@
+openapi: 3.0.3
+info:
+  title: Knox JIT Access API
+  description: Optional API documentation for Knox Identity and Access Management Gateway JIT feature.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8443
+    description: Local Knox Proxy Server
+
+components:
+  securitySchemes:
+    KnoxAPIKey:
+      type: apiKey
+      in: header
+      name: X-Knox-API-Key
+      description: API Key for Knox Admin endpoints. Alternatively, use Bearer token.
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer token containing the Knox API Key.
+    KnoxSessionToken:
+      type: apiKey
+      in: cookie
+      name: knox_session
+      description: Knox browser session cookie for user-facing APIs.
+
+  schemas:
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ticket_number:
+          type: string
+        email:
+          type: string
+        display_name:
+          type: string
+        team:
+          type: string
+        workflow_id:
+          type: string
+        access_type:
+          type: string
+        description:
+          type: string
+        period_start:
+          type: string
+          format: date-time
+        period_end:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [requested, approved, active, expired, rejected, revoked, canceled]
+        status_reason:
+          type: string
+        updated_by:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    TicketResponse:
+      type: object
+      properties:
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+        duration:
+          type: string
+
+    TicketListResponse:
+      type: object
+      properties:
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ticket'
+        total:
+          type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+
+paths:
+  /knox-api/request-jit:
+    post:
+      summary: Request JIT Access
+      description: Submit a new JIT ticket for a workflow.
+      security:
+        - KnoxSessionToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - workflow_id
+                - access_type
+                - period_start
+                - period_end
+                - description
+              properties:
+                workflow_id:
+                  type: string
+                access_type:
+                  type: array
+                  items:
+                    type: string
+                    enum: [run, edit]
+                period_start:
+                  type: string
+                  format: date-time
+                period_end:
+                  type: string
+                  format: date-time
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Ticket Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+
+  /knox-api/tickets:
+    get:
+      summary: List My Tickets
+      description: Get a list of tickets requested by the current user.
+      security:
+        - KnoxSessionToken: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filter tickets by status
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: List of tickets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketListResponse'
+
+  /knox-api/tickets/{id}:
+    get:
+      summary: Get My Ticket Details
+      description: Retrieves details of a specific ticket owned by the current user.
+      security:
+        - KnoxSessionToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ticket detailing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+
+  /knox-api/tickets/{id}/cancel:
+    patch:
+      summary: Cancel My Ticket
+      description: Cancels a 'requested' ticket owned by the current user.
+      security:
+        - KnoxSessionToken: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ticket Canceled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+
+  /knox-api/user-info:
+    get:
+      summary: Get User Profile Information
+      security:
+        - KnoxSessionToken: []
+      responses:
+        '200':
+          description: User Profile Details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                  display_name:
+                    type: string
+                  team:
+                    type: string
+
+  /knox-api/admin/tickets:
+    get:
+      summary: List All Tickets (Admin)
+      description: Allows automated systems or admins to query all tickets.
+      security:
+        - KnoxAPIKey: []
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: email
+          schema:
+            type: string
+        - in: query
+          name: workflow_id
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of tickets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketListResponse'
+
+  /knox-api/admin/tickets/{id}:
+    get:
+      summary: Get Ticket Details (Admin)
+      security:
+        - KnoxAPIKey: []
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ticket detailing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+
+  /knox-api/admin/tickets/{id}/status:
+    patch:
+      summary: Update Ticket Status (Admin)
+      description: Allows automated systems to APPROVE or REJECT a ticket.
+      security:
+        - KnoxAPIKey: []
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+                - updated_by
+              properties:
+                status:
+                  type: string
+                  enum: [approved, rejected, revoked]
+                reason:
+                  type: string
+                updated_by:
+                  type: string
+      responses:
+        '200':
+          description: Status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'

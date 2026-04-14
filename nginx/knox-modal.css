@@ -1,0 +1,577 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   KNOX Modal — n8n-Themed JIT Access Request UI
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --knox-bg-primary: #1e1e1e;
+  --knox-bg-secondary: #252528;
+  --knox-bg-tertiary: #303033;
+  --knox-bg-overlay: rgba(0, 0, 0, 0.75);
+  --knox-accent: #ff6d5a;
+  --knox-accent-hover: #e55a4f;
+  --knox-accent-glow: rgba(255, 109, 90, 0.25);
+  --knox-text-primary: #e8e8e8;
+  --knox-text-secondary: #a0a0b8;
+  --knox-text-muted: #6b6b85;
+  --knox-border: #3a3a3a;
+  --knox-border-focus: #ff6d5a;
+  --knox-success: #27ae60;
+  --knox-success-bg: rgba(39, 174, 96, 0.15);
+  --knox-danger: #e74c3c;
+  --knox-danger-bg: rgba(231, 76, 60, 0.15);
+  --knox-warning: #f39c12;
+  --knox-warning-bg: rgba(243, 156, 18, 0.15);
+  --knox-info: #3498db;
+  --knox-info-bg: rgba(52, 152, 219, 0.15);
+  --knox-radius: 8px;
+  --knox-radius-sm: 4px;
+  --knox-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --knox-transition: 0.2s ease;
+  --knox-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+}
+
+/* ── Overlay ─────────────────────────────────────────────────────────────────── */
+
+.knox-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--knox-bg-overlay);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.knox-modal-overlay.knox-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ── Modal Container ─────────────────────────────────────────────────────────── */
+
+.knox-modal {
+  background: var(--knox-bg-primary);
+  border: 1px solid var(--knox-border);
+  border-radius: 12px;
+  width: 95%;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--knox-shadow);
+  font-family: var(--knox-font);
+  color: var(--knox-text-primary);
+  transform: translateY(20px) scale(0.97);
+  transition: transform 0.25s ease;
+}
+
+.knox-modal-overlay.knox-visible .knox-modal {
+  transform: translateY(0) scale(1);
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────────── */
+
+.knox-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--knox-border);
+}
+
+.knox-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--knox-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.knox-modal-title::before {
+  content: '🔑';
+  font-size: 18px;
+}
+
+.knox-modal-close {
+  background: none;
+  border: none;
+  color: var(--knox-text-secondary);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color var(--knox-transition);
+  border-radius: var(--knox-radius-sm);
+}
+
+.knox-modal-close:hover {
+  color: var(--knox-text-primary);
+  background: var(--knox-bg-tertiary);
+}
+
+/* ── Tabs ────────────────────────────────────────────────────────────────────── */
+
+.knox-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--knox-border);
+  background: var(--knox-bg-secondary);
+}
+
+.knox-tab {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--knox-text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--knox-transition);
+  font-family: var(--knox-font);
+}
+
+.knox-tab:hover {
+  color: var(--knox-text-primary);
+  background: var(--knox-bg-tertiary);
+}
+
+.knox-tab.knox-tab-active {
+  color: var(--knox-accent);
+  border-bottom-color: var(--knox-accent);
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────────── */
+
+.knox-modal-body {
+  padding: 18px 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.knox-tab-content {
+  display: none;
+}
+
+.knox-tab-content.knox-tab-visible {
+  display: block;
+}
+
+/* ── Form ────────────────────────────────────────────────────────────────────── */
+
+.knox-form-group {
+  margin-bottom: 16px;
+}
+
+.knox-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--knox-text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.knox-input,
+.knox-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--knox-bg-secondary);
+  border: 1px solid var(--knox-border);
+  border-radius: var(--knox-radius);
+  color: var(--knox-text-primary);
+  font-size: 14px;
+  font-family: var(--knox-font);
+  transition: border-color var(--knox-transition), box-shadow var(--knox-transition);
+  box-sizing: border-box;
+}
+
+.knox-input:focus,
+.knox-textarea:focus {
+  outline: none;
+  border-color: var(--knox-border-focus);
+  box-shadow: 0 0 0 3px var(--knox-accent-glow);
+}
+
+.knox-input::placeholder,
+.knox-textarea::placeholder {
+  color: var(--knox-text-muted);
+}
+
+.knox-textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.knox-input.knox-auto-filled {
+  background: var(--knox-bg-tertiary);
+  border-style: dashed;
+}
+
+/* ── Checkbox Group ──────────────────────────────────────────────────────────── */
+
+.knox-checkbox-group {
+  display: flex;
+  gap: 16px;
+}
+
+.knox-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--knox-text-primary);
+  padding: 8px 14px;
+  background: var(--knox-bg-secondary);
+  border: 1px solid var(--knox-border);
+  border-radius: var(--knox-radius);
+  transition: all var(--knox-transition);
+  user-select: none;
+  flex: 1;
+  justify-content: center;
+}
+
+.knox-checkbox-label:hover {
+  border-color: var(--knox-accent);
+  background: var(--knox-bg-tertiary);
+}
+
+.knox-checkbox-label input[type="checkbox"] {
+  accent-color: var(--knox-accent);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.knox-checkbox-label input[type="checkbox"]:checked+span {
+  color: var(--knox-accent);
+  font-weight: 600;
+}
+
+/* ── Date Row ────────────────────────────────────────────────────────────────── */
+
+.knox-date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.knox-duration-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--knox-success-bg);
+  color: var(--knox-success);
+  border: 1px solid rgba(39, 174, 96, 0.3);
+  transition: all var(--knox-transition);
+}
+
+.knox-duration-badge.knox-duration-warning {
+  background: var(--knox-danger-bg);
+  color: var(--knox-danger);
+  border-color: rgba(231, 76, 60, 0.3);
+}
+
+.knox-duration-badge::before {
+  content: '⏱';
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────────── */
+
+.knox-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 22px 18px;
+  border-top: 1px solid var(--knox-border);
+}
+
+.knox-btn {
+  padding: 9px 20px;
+  border-radius: var(--knox-radius);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--knox-transition);
+  font-family: var(--knox-font);
+}
+
+.knox-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.knox-btn-secondary {
+  background: var(--knox-bg-secondary);
+  color: var(--knox-text-secondary);
+  border-color: var(--knox-border);
+}
+
+.knox-btn-secondary:hover:not(:disabled) {
+  background: var(--knox-bg-tertiary);
+  color: var(--knox-text-primary);
+}
+
+.knox-btn-primary {
+  background: var(--knox-accent);
+  color: #fff;
+  border-color: var(--knox-accent);
+}
+
+.knox-btn-primary:hover:not(:disabled) {
+  background: var(--knox-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--knox-accent-glow);
+}
+
+.knox-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ── Spinner ─────────────────────────────────────────────────────────────────── */
+
+.knox-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: knox-spin 0.6s linear infinite;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+@keyframes knox-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Ticket Table ────────────────────────────────────────────────────────────── */
+
+.knox-ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.knox-ticket-table th {
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--knox-text-muted);
+  border-bottom: 1px solid var(--knox-border);
+}
+
+.knox-ticket-table td {
+  padding: 10px 10px;
+  color: var(--knox-text-primary);
+  border-bottom: 1px solid rgba(58, 58, 58, 0.5);
+  vertical-align: middle;
+}
+
+.knox-ticket-table tr:hover td {
+  background: var(--knox-bg-secondary);
+}
+
+.knox-ticket-table .knox-td-mono {
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+  font-size: 12px;
+  color: var(--knox-text-secondary);
+}
+
+/* ── Status Badges ───────────────────────────────────────────────────────────── */
+
+.knox-status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.knox-status-requested {
+  background: var(--knox-warning-bg);
+  color: var(--knox-warning);
+  border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.knox-status-approved {
+  background: var(--knox-info-bg);
+  color: var(--knox-info);
+  border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.knox-status-active {
+  background: var(--knox-success-bg);
+  color: var(--knox-success);
+  border: 1px solid rgba(39, 174, 96, 0.3);
+}
+
+.knox-status-expired,
+.knox-status-canceled {
+  background: rgba(107, 107, 107, 0.15);
+  color: var(--knox-text-muted);
+  border: 1px solid rgba(107, 107, 107, 0.3);
+}
+
+.knox-status-rejected,
+.knox-status-revoked {
+  background: var(--knox-danger-bg);
+  color: var(--knox-danger);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+/* ── Empty State ─────────────────────────────────────────────────────────────── */
+
+.knox-empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--knox-text-muted);
+}
+
+.knox-empty-state-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.knox-empty-state-text {
+  font-size: 14px;
+}
+
+/* ── Toast Notifications ─────────────────────────────────────────────────────── */
+
+.knox-toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.knox-toast {
+  padding: 12px 18px;
+  border-radius: var(--knox-radius);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--knox-font);
+  color: #fff;
+  max-width: 380px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+  animation: knox-toast-in 0.3s ease forwards;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.knox-toast-success {
+  background: linear-gradient(135deg, #27ae60, #219a52);
+}
+
+.knox-toast-error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.knox-toast-dismiss {
+  animation: knox-toast-out 0.3s ease forwards;
+}
+
+@keyframes knox-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes knox-toast-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+/* ── Sidebar Menu Items ──────────────────────────────────────────────────────── */
+
+.knox-menu-item {
+  cursor: pointer;
+  transition: background var(--knox-transition), color var(--knox-transition);
+}
+
+.knox-menu-item:hover {
+  background: var(--knox-bg-tertiary) !important;
+}
+
+/* ── Validation Errors ───────────────────────────────────────────────────────── */
+
+.knox-error-msg {
+  color: var(--knox-danger);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.knox-input.knox-input-error {
+  border-color: var(--knox-danger);
+}
+
+/* ── Loading ─────────────────────────────────────────────────────────────────── */
+
+.knox-loading {
+  text-align: center;
+  padding: 24px;
+  color: var(--knox-text-muted);
+  font-size: 14px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 540px) {
+  .knox-modal {
+    max-width: 100%;
+    margin: 8px;
+    max-height: calc(100vh - 16px);
+    border-radius: var(--knox-radius);
+  }
+
+  .knox-date-row {
+    grid-template-columns: 1fr;
+  }
+
+  .knox-checkbox-group {
+    flex-direction: column;
+  }
+}
