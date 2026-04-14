@@ -14,7 +14,6 @@ import (
 	"knox-proxy/config"
 	"knox-proxy/cookie"
 	"knox-proxy/credential"
-	"knox-proxy/docs"
 	"knox-proxy/jit"
 	"knox-proxy/middleware"
 	"knox-proxy/policy"
@@ -197,7 +196,6 @@ func main() {
 		slog.Error("Failed to initialize JIT scheduler", "error", err)
 	}
 
-
 	// ─── HTTP Routes ──────────────────────────────────────────────────────
 	mux := http.NewServeMux()
 
@@ -213,9 +211,6 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"status":"ok","service":"knox","version":"1.0.0"}`))
 	})
-
-	// Swagger UI endpoint
-	docs.RegisterHandlers(mux)
 
 	// Admin API routes (protected by API Key internally, NOT by session Auth)
 	mux.Handle("/knox-api/admin/", middleware.Logging(jitHandler))
@@ -241,7 +236,7 @@ func main() {
 		Addr:         fmt.Sprintf(":%d", cfg.ProxyPort),
 		Handler:      mux,
 		ReadTimeout:  30 * time.Second,
-		WriteTimeout: 0,           // Disabled for WebSocket support
+		WriteTimeout: 0, // Disabled for WebSocket support
 		IdleTimeout:  120 * time.Second,
 	}
 

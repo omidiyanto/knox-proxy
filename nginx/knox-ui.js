@@ -97,61 +97,61 @@
 
     return '' +
       '<div class="knox-modal-header">' +
-        '<span class="knox-modal-title">Request JIT Access</span>' +
-        '<button class="knox-modal-close" id="knox-close-btn" title="Close">&times;</button>' +
+      '<span class="knox-modal-title">Request JIT Access</span>' +
+      '<button class="knox-modal-close" id="knox-close-btn" title="Close">&times;</button>' +
       '</div>' +
       '<div class="knox-tabs">' +
-        '<button class="knox-tab knox-tab-active" data-knox-tab="request">New Request</button>' +
-        '<button class="knox-tab" data-knox-tab="tickets">My Tickets</button>' +
+      '<button class="knox-tab knox-tab-active" data-knox-tab="request">New Request</button>' +
+      '<button class="knox-tab" data-knox-tab="tickets">My Tickets</button>' +
       '</div>' +
       '<div class="knox-modal-body">' +
-        '<!-- New Request Tab -->' +
-        '<div class="knox-tab-content knox-tab-visible" id="knox-tab-request">' +
-          '<div class="knox-form-group">' +
-            '<label class="knox-label">Workflow ID</label>' +
-            '<input type="text" class="knox-input' + autoClass + '" id="knox-workflow-id" ' +
-              'placeholder="e.g., AUqnl095YhDTo47d" value="' + wfId + '">' +
-          '</div>' +
-          '<div class="knox-form-group">' +
-            '<label class="knox-label">Access Type</label>' +
-            '<div class="knox-checkbox-group">' +
-              '<label class="knox-checkbox-label">' +
-                '<input type="checkbox" name="knox-access" value="run" checked> ' +
-                '<span>Run</span>' +
-              '</label>' +
-              '<label class="knox-checkbox-label">' +
-                '<input type="checkbox" name="knox-access" value="edit"> ' +
-                '<span>Edit</span>' +
-              '</label>' +
-            '</div>' +
-          '</div>' +
-          '<div class="knox-form-group">' +
-            '<label class="knox-label">Request Period</label>' +
-            '<div class="knox-date-row">' +
-              '<div>' +
-                '<input type="datetime-local" class="knox-input" id="knox-period-start" value="' + nowStr + '">' +
-              '</div>' +
-              '<div>' +
-                '<input type="datetime-local" class="knox-input" id="knox-period-end" value="' + endStr + '">' +
-              '</div>' +
-            '</div>' +
-            '<div class="knox-duration-badge" id="knox-duration-badge">1d 0h 0m</div>' +
-          '</div>' +
-          '<div class="knox-form-group">' +
-            '<label class="knox-label">Description</label>' +
-            '<textarea class="knox-textarea" id="knox-description" ' +
-              'placeholder="Reason for access request (min 10 characters)..." rows="3"></textarea>' +
-          '</div>' +
-        '</div>' +
-        '<!-- My Tickets Tab -->' +
-        '<div class="knox-tab-content" id="knox-tab-tickets">' +
-          '<div class="knox-loading" id="knox-tickets-loading">Loading tickets...</div>' +
-          '<div id="knox-tickets-content"></div>' +
-        '</div>' +
+      '<!-- New Request Tab -->' +
+      '<div class="knox-tab-content knox-tab-visible" id="knox-tab-request">' +
+      '<div class="knox-form-group">' +
+      '<label class="knox-label">Workflow ID</label>' +
+      '<input type="text" class="knox-input' + autoClass + '" id="knox-workflow-id" ' +
+      'placeholder="e.g., AUqnl095YhDTo47d" value="' + wfId + '">' +
+      '</div>' +
+      '<div class="knox-form-group">' +
+      '<label class="knox-label">Access Type</label>' +
+      '<div class="knox-checkbox-group">' +
+      '<label class="knox-checkbox-label">' +
+      '<input type="checkbox" name="knox-access" value="run" checked> ' +
+      '<span>Run</span>' +
+      '</label>' +
+      '<label class="knox-checkbox-label">' +
+      '<input type="checkbox" name="knox-access" value="edit"> ' +
+      '<span>Edit</span>' +
+      '</label>' +
+      '</div>' +
+      '</div>' +
+      '<div class="knox-form-group">' +
+      '<label class="knox-label">Request Period</label>' +
+      '<div class="knox-date-row">' +
+      '<div>' +
+      '<input type="datetime-local" class="knox-input" id="knox-period-start" value="' + nowStr + '">' +
+      '</div>' +
+      '<div>' +
+      '<input type="datetime-local" class="knox-input" id="knox-period-end" value="' + endStr + '">' +
+      '</div>' +
+      '</div>' +
+      '<div class="knox-duration-badge" id="knox-duration-badge">1d 0h 0m</div>' +
+      '</div>' +
+      '<div class="knox-form-group">' +
+      '<label class="knox-label">Description</label>' +
+      '<textarea class="knox-textarea" id="knox-description" ' +
+      'placeholder="Reason for access request (min 10 characters)..." rows="3"></textarea>' +
+      '</div>' +
+      '</div>' +
+      '<!-- My Tickets Tab -->' +
+      '<div class="knox-tab-content" id="knox-tab-tickets">' +
+      '<div class="knox-loading" id="knox-tickets-loading">Loading tickets...</div>' +
+      '<div id="knox-tickets-content"></div>' +
+      '</div>' +
       '</div>' +
       '<div class="knox-modal-footer" id="knox-modal-footer">' +
-        '<button class="knox-btn knox-btn-secondary" id="knox-cancel-btn">Cancel</button>' +
-        '<button class="knox-btn knox-btn-primary" id="knox-submit-btn">Submit Request</button>' +
+      '<button class="knox-btn knox-btn-secondary" id="knox-cancel-btn">Cancel</button>' +
+      '<button class="knox-btn knox-btn-primary" id="knox-submit-btn">Submit Request</button>' +
       '</div>';
   }
 
@@ -319,30 +319,30 @@
         description: description
       })
     })
-    .then(function (resp) {
-      return resp.json().then(function (data) {
-        return { ok: resp.ok, status: resp.status, data: data };
+      .then(function (resp) {
+        return resp.json().then(function (data) {
+          return { ok: resp.ok, status: resp.status, data: data };
+        });
+      })
+      .then(function (result) {
+        if (result.ok) {
+          var tn = result.data.ticket ? result.data.ticket.ticket_number : 'submitted';
+          showToast('success', 'Ticket ' + tn + ' created successfully!');
+          closeModal();
+          // Reset form
+          document.getElementById('knox-description').value = '';
+        } else {
+          var msg = result.data.message || result.data.error || 'Request failed';
+          showToast('error', msg);
+        }
+      })
+      .catch(function () {
+        showToast('error', 'Network error. Please try again.');
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Request';
       });
-    })
-    .then(function (result) {
-      if (result.ok) {
-        var tn = result.data.ticket ? result.data.ticket.ticket_number : 'submitted';
-        showToast('success', 'Ticket ' + tn + ' created successfully!');
-        closeModal();
-        // Reset form
-        document.getElementById('knox-description').value = '';
-      } else {
-        var msg = result.data.message || result.data.error || 'Request failed';
-        showToast('error', msg);
-      }
-    })
-    .catch(function () {
-      showToast('error', 'Network error. Please try again.');
-    })
-    .finally(function () {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = 'Submit Request';
-    });
   }
 
   // ── Ticket History ───────────────────────────────────────────────────────
@@ -379,7 +379,7 @@
 
     var html = '<table class="knox-ticket-table">' +
       '<thead><tr>' +
-        '<th>Ticket</th><th>Workflow</th><th>Type</th><th>Period</th><th>Duration</th><th>Status</th><th>Action</th>' +
+      '<th>Ticket</th><th>Workflow</th><th>Type</th><th>Period</th><th>Duration</th><th>Status</th><th>Action</th>' +
       '</tr></thead><tbody>';
 
     for (var i = 0; i < tickets.length; i++) {
@@ -389,7 +389,7 @@
       if (t.status === 'requested') {
         actionBtn = '<button class="knox-btn knox-btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="window.knoxCancelTicket(\'' + t.id + '\')">Cancel</button>';
       }
-      
+
       var periodStr = formatDisplayDate(t.period_start) + ' - ' + formatDisplayDate(t.period_end);
 
       html += '<tr>' +
@@ -400,7 +400,7 @@
         '<td>' + d.text + '</td>' +
         '<td>' + getStatusBadge(t.status) + '</td>' +
         '<td>' + actionBtn + '</td>' +
-      '</tr>';
+        '</tr>';
     }
 
     html += '</tbody></table>';
@@ -417,7 +417,7 @@
   // Exposed to global scope for inline onclick handlers
   window.knoxCancelTicket = function (ticketId) {
     if (!confirm('Are you sure you want to cancel this ticket?')) return;
-    
+
     var loadingEl = document.getElementById('knox-tickets-loading');
     if (loadingEl) loadingEl.style.display = 'block';
 
@@ -435,6 +435,67 @@
         showToast('error', 'Failed to cancel ticket');
       });
   };
+  // ── User Info Modal ──────────────────────────────────────────────────────
+
+  function openUserInfoModal() {
+    fetch('/knox-api/user-info')
+      .then(function (resp) { return resp.json(); })
+      .then(function (data) {
+        showUserInfoBox(data);
+      })
+      .catch(function () {
+        showToast('error', 'Failed to load user info');
+      });
+  }
+
+  function showUserInfoBox(data) {
+    var uiOverlay = document.getElementById('knox-userinfo-overlay');
+
+    if (!uiOverlay) {
+      uiOverlay = document.createElement('div');
+      uiOverlay.className = 'knox-modal-overlay';
+      uiOverlay.id = 'knox-userinfo-overlay';
+
+      var modal = document.createElement('div');
+      modal.className = 'knox-modal';
+      modal.style.maxWidth = '400px';
+
+      uiOverlay.appendChild(modal);
+      document.body.appendChild(uiOverlay);
+
+      uiOverlay.addEventListener('click', function (e) {
+        if (e.target === uiOverlay) uiOverlay.classList.remove('knox-visible');
+      });
+    }
+
+    var modal = uiOverlay.querySelector('.knox-modal');
+    modal.innerHTML = '' +
+      '<div class="knox-modal-header">' +
+      '<span class="knox-modal-title" style="font-size:16px;">User Info</span>' +
+      '<button class="knox-modal-close" id="knox-ui-close-btn" title="Close">&times;</button>' +
+      '</div>' +
+      '<div class="knox-modal-body" style="padding-bottom: 24px;">' +
+      '<div class="knox-form-group">' +
+      '<label class="knox-label">Display Name</label>' +
+      '<div class="knox-input knox-auto-filled">' + escapeHtml(data.display_name || '-') + '</div>' +
+      '</div>' +
+      '<div class="knox-form-group">' +
+      '<label class="knox-label">Email</label>' +
+      '<div class="knox-input knox-auto-filled">' + escapeHtml(data.email || '-') + '</div>' +
+      '</div>' +
+      '<div class="knox-form-group" style="margin-bottom:0;">' +
+      '<label class="knox-label">Team</label>' +
+      '<div class="knox-input knox-auto-filled">' + escapeHtml(data.team || '-') + '</div>' +
+      '</div>' +
+      '</div>';
+
+    document.getElementById('knox-ui-close-btn').addEventListener('click', function () {
+      uiOverlay.classList.remove('knox-visible');
+    });
+    setTimeout(function () {
+      uiOverlay.classList.add('knox-visible');
+    }, 10);
+  }
 
   // ── Sidebar Menu Injection ───────────────────────────────────────────────
 
@@ -445,13 +506,12 @@
     var logoutBtn = document.getElementById('custom-logout-btn');
     if (!logoutBtn || !logoutBtn.parentNode) return;
 
-    // Create "Request Access" menu item by cloning logout's structure
+    // 1. Buat menu "JIT Access"
     var requestItem = logoutBtn.cloneNode(true);
     requestItem.id = 'knox-menu-request';
     requestItem.className = (requestItem.className || '') + ' knox-menu-item';
     if (requestItem.href) requestItem.href = '#';
 
-    // Update icon to key icon
     var svgs = requestItem.querySelectorAll('svg');
     if (svgs.length > 0) {
       var svg = svgs[0];
@@ -465,27 +525,58 @@
       for (var i = 1; i < svgs.length; i++) svgs[i].remove();
     }
 
-    // Update text
     var walker = document.createTreeWalker(requestItem, NodeFilter.SHOW_TEXT, null, false);
     var textNode;
     while (textNode = walker.nextNode()) {
-      if (textNode.nodeValue.trim() === 'Logout') {
-        textNode.nodeValue = 'JIT Access';
-      }
+      if (textNode.nodeValue.trim() === 'Logout') textNode.nodeValue = 'JIT Access';
     }
 
-    // Remove badge/indicator clones
     var badges = requestItem.querySelectorAll('[class*="badge"], [class*="indicator"], [class*="dot"], [class*="update"]');
     for (var b = 0; b < badges.length; b++) badges[b].remove();
 
     requestItem.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      openModal('request');
+      e.preventDefault(); e.stopPropagation(); openModal('request');
     });
 
-    // Insert: JIT Access → Logout (top to bottom)
-    logoutBtn.parentNode.insertBefore(requestItem, logoutBtn);
+    // 2. Buat menu "User Info"
+    var userInfoItem = logoutBtn.cloneNode(true);
+    userInfoItem.id = 'knox-menu-userinfo';
+    userInfoItem.className = (userInfoItem.className || '') + ' knox-menu-item';
+    if (userInfoItem.href) userInfoItem.href = '#';
+
+    // Ubah ikon menjadi ikon user / orang
+    var uSvgs = userInfoItem.querySelectorAll('svg');
+    if (uSvgs.length > 0) {
+      var uSvg = uSvgs[0];
+      uSvg.innerHTML = '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>';
+      uSvg.setAttribute('viewBox', '0 0 24 24');
+      uSvg.setAttribute('fill', 'none');
+      uSvg.setAttribute('stroke', 'currentColor');
+      uSvg.setAttribute('stroke-width', '2');
+      uSvg.setAttribute('stroke-linecap', 'round');
+      uSvg.setAttribute('stroke-linejoin', 'round');
+      for (var j = 1; j < uSvgs.length; j++) uSvgs[j].remove();
+    }
+
+    // Ubah text dari Logout menjadi User Info
+    var uWalker = document.createTreeWalker(userInfoItem, NodeFilter.SHOW_TEXT, null, false);
+    var uTextNode;
+    while (uTextNode = uWalker.nextNode()) {
+      if (uTextNode.nodeValue.trim() === 'Logout') uTextNode.nodeValue = 'User Info';
+    }
+
+    var uBadges = userInfoItem.querySelectorAll('[class*="badge"], [class*="indicator"], [class*="dot"], [class*="update"]');
+    for (var k = 0; k < uBadges.length; k++) uBadges[k].remove();
+
+    // Event listener untuk memanggil modal baru
+    userInfoItem.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation(); openUserInfoModal();
+    });
+
+    // 3. Sisipkan (Insert) ke sidebar n8n
+    // Urutan dari atas ke bawah yang terbentuk: JIT Access -> User Info -> Logout
+    logoutBtn.parentNode.insertBefore(userInfoItem, logoutBtn);
+    logoutBtn.parentNode.insertBefore(requestItem, userInfoItem);
   }
 
   // ── Initialization ───────────────────────────────────────────────────────
