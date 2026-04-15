@@ -266,7 +266,9 @@ func (a *OIDCAuth) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		logoutURL, _ := url.Parse(a.endSessionEndpoint)
 		q := logoutURL.Query()
 		q.Set("client_id", a.clientID)
-		q.Set("post_logout_redirect_uri", a.oauth2Config.RedirectURL)
+		redirectURL, _ := url.Parse(a.oauth2Config.RedirectURL)
+		redirectURL.Path = "/"
+		q.Set("post_logout_redirect_uri", redirectURL.String())
 		logoutURL.RawQuery = q.Encode()
 		http.Redirect(w, r, logoutURL.String(), http.StatusFound)
 		return
