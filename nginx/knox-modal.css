@@ -575,3 +575,46 @@
     flex-direction: column;
   }
 }
+
+/* ── Watermark Overlay ───────────────────────────────────────────────────────── */
+
+.knox-watermark-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.knox-watermark-overlay.knox-watermark-visible {
+  opacity: 1;
+}
+
+.knox-watermark-inner {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 40px 60px;
+  transform: rotate(-30deg);
+  transform-origin: center center;
+}
+
+.knox-watermark-text {
+  font-family: var(--knox-font);
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.04);
+  white-space: nowrap;
+  user-select: none;
+  letter-spacing: 2px;
+  text-transform: none;
+  line-height: 1;
+  padding: 20px 0;
+}

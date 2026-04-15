@@ -500,43 +500,46 @@
   // ── Sidebar Menu Injection ───────────────────────────────────────────────
 
   function injectMenuItems() {
-    if (document.getElementById('knox-menu-request')) return;
+    if (document.getElementById('knox-menu-userinfo')) return;
 
     // Find the custom logout button that was injected by nginx
     var logoutBtn = document.getElementById('custom-logout-btn');
     if (!logoutBtn || !logoutBtn.parentNode) return;
 
-    // 1. Buat menu "JIT Access"
-    var requestItem = logoutBtn.cloneNode(true);
-    requestItem.id = 'knox-menu-request';
-    requestItem.className = (requestItem.className || '') + ' knox-menu-item';
-    if (requestItem.href) requestItem.href = '#';
+    // 1. Buat menu "JIT Access" (only if enabled via env var)
+    var requestItem = null;
+    if (window.__KNOX_JIT__) {
+      requestItem = logoutBtn.cloneNode(true);
+      requestItem.id = 'knox-menu-request';
+      requestItem.className = (requestItem.className || '') + ' knox-menu-item';
+      if (requestItem.href) requestItem.href = '#';
 
-    var svgs = requestItem.querySelectorAll('svg');
-    if (svgs.length > 0) {
-      var svg = svgs[0];
-      svg.innerHTML = '<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>';
-      svg.setAttribute('viewBox', '0 0 24 24');
-      svg.setAttribute('fill', 'none');
-      svg.setAttribute('stroke', 'currentColor');
-      svg.setAttribute('stroke-width', '2');
-      svg.setAttribute('stroke-linecap', 'round');
-      svg.setAttribute('stroke-linejoin', 'round');
-      for (var i = 1; i < svgs.length; i++) svgs[i].remove();
+      var svgs = requestItem.querySelectorAll('svg');
+      if (svgs.length > 0) {
+        var svg = svgs[0];
+        svg.innerHTML = '<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>';
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        for (var i = 1; i < svgs.length; i++) svgs[i].remove();
+      }
+
+      var walker = document.createTreeWalker(requestItem, NodeFilter.SHOW_TEXT, null, false);
+      var textNode;
+      while (textNode = walker.nextNode()) {
+        if (textNode.nodeValue.trim() === 'Logout') textNode.nodeValue = 'JIT Access';
+      }
+
+      var badges = requestItem.querySelectorAll('[class*="badge"], [class*="indicator"], [class*="dot"], [class*="update"]');
+      for (var b = 0; b < badges.length; b++) badges[b].remove();
+
+      requestItem.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation(); openModal('request');
+      });
     }
-
-    var walker = document.createTreeWalker(requestItem, NodeFilter.SHOW_TEXT, null, false);
-    var textNode;
-    while (textNode = walker.nextNode()) {
-      if (textNode.nodeValue.trim() === 'Logout') textNode.nodeValue = 'JIT Access';
-    }
-
-    var badges = requestItem.querySelectorAll('[class*="badge"], [class*="indicator"], [class*="dot"], [class*="update"]');
-    for (var b = 0; b < badges.length; b++) badges[b].remove();
-
-    requestItem.addEventListener('click', function (e) {
-      e.preventDefault(); e.stopPropagation(); openModal('request');
-    });
 
     // 2. Buat menu "User Info"
     var userInfoItem = logoutBtn.cloneNode(true);
@@ -574,9 +577,11 @@
     });
 
     // 3. Sisipkan (Insert) ke sidebar n8n
-    // Urutan dari atas ke bawah yang terbentuk: JIT Access -> User Info -> Logout
+    // Urutan dari atas ke bawah: [JIT Access] -> User Info -> Logout
     logoutBtn.parentNode.insertBefore(userInfoItem, logoutBtn);
-    logoutBtn.parentNode.insertBefore(requestItem, userInfoItem);
+    if (requestItem) {
+      logoutBtn.parentNode.insertBefore(requestItem, userInfoItem);
+    }
   }
 
   // ── Initialization ───────────────────────────────────────────────────────
@@ -584,8 +589,8 @@
   // Poll until the logout button is available, then inject menu items
   var menuInterval = setInterval(function () {
     injectMenuItems();
-    // Stop polling once injected
-    if (document.getElementById('knox-menu-request')) {
+    // Stop polling once injected (use userinfo as sentinel — always present)
+    if (document.getElementById('knox-menu-userinfo')) {
       clearInterval(menuInterval);
     }
   }, 500);
@@ -606,9 +611,63 @@
       }
     }
     // Re-inject if menu items were removed (n8n re-renders sidebar)
-    if (!document.getElementById('knox-menu-request')) {
+    if (!document.getElementById('knox-menu-userinfo')) {
       injectMenuItems();
     }
   }, 1000);
+
+  // ── Watermark Overlay ───────────────────────────────────────────────────
+
+  function initWatermark() {
+    // Only render if globally enabled via nginx-injected config
+    if (!window.__KNOX_WATERMARK__) return;
+    if (document.getElementById('knox-watermark')) return;
+
+    fetch('/knox-api/user-info')
+      .then(function (resp) {
+        if (!resp.ok) throw new Error('Failed');
+        return resp.json();
+      })
+      .then(function (data) {
+        var name = data.display_name || 'User';
+        var email = data.email || '';
+        var label = name + (email ? ' (' + email + ')' : '');
+        renderWatermark(label);
+      })
+      .catch(function () {
+        // Silently skip watermark on error
+      });
+  }
+
+  function renderWatermark(label) {
+    if (document.getElementById('knox-watermark')) return;
+
+    var overlay = document.createElement('div');
+    overlay.id = 'knox-watermark';
+    overlay.className = 'knox-watermark-overlay';
+
+    var inner = document.createElement('div');
+    inner.className = 'knox-watermark-inner';
+
+    // Fill with enough repeated text to cover the rotated area
+    var count = 120;
+    for (var i = 0; i < count; i++) {
+      var span = document.createElement('span');
+      span.className = 'knox-watermark-text';
+      span.textContent = label;
+      inner.appendChild(span);
+    }
+
+    overlay.appendChild(inner);
+    document.body.appendChild(overlay);
+
+    // Fade in
+    requestAnimationFrame(function () {
+      overlay.classList.add('knox-watermark-visible');
+    });
+  }
+
+  // Initialize watermark after a short delay to ensure auth session is ready
+  setTimeout(initWatermark, 1500);
 
 })();

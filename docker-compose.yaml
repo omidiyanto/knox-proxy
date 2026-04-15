@@ -65,8 +65,13 @@ services:
     image: nginx:alpine
     container_name: nginx-knox
     restart: always
+    entrypoint: ["/docker-entrypoint.d/knox-entrypoint.sh"]
+    environment:
+      - KNOX_JIT_ENABLED=${KNOX_JIT_ENABLED:-true}
+      - KNOX_WATERMARK_ENABLED=${KNOX_WATERMARK_ENABLED:-true}
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
+      - ./nginx/entrypoint.sh:/docker-entrypoint.d/knox-entrypoint.sh:ro
       - ./nginx/knox-ui.js:/usr/share/nginx/html/custom-assets/knox-ui.js:ro
       - ./nginx/knox-modal.css:/usr/share/nginx/html/custom-assets/knox-modal.css:ro
     networks:
