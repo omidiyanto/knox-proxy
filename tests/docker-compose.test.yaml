@@ -76,6 +76,8 @@ services:
       - N8N_DIAGNOSTICS_ENABLED=false
       - N8N_TEMPLATES_ENABLED=false
       - N8N_PORT=5678
+    ports:
+      - "5678:5678"
     depends_on:
       n8n-postgres:
         condition: service_healthy
