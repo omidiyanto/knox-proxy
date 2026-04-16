@@ -47,6 +47,7 @@ LOGIN_RESPONSE=$(curl -s -c "$COOKIE_JAR" -w "\nHTTP_STATUS:%{http_code}" -X POS
   -H "Content-Type: application/json" \
   -d "{
     \"email\": \"${OWNER_EMAIL}\",
+    \"emailOrLdapLoginId\": \"${OWNER_EMAIL}\",
     \"password\": \"${OWNER_PASSWORD}\"
   }" || true)
 
