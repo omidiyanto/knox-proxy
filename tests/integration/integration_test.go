@@ -1,9 +1,11 @@
 package integration
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -38,11 +40,27 @@ func envOr(key, def string) string {
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
+func customTransport() *http.Transport {
+	dialer := &net.Dialer{
+		Timeout:   30 * time.Second,
+		KeepAlive: 30 * time.Second,
+	}
+	return &http.Transport{
+		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+			if addr == "keycloak:8080" {
+				addr = "127.0.0.1:8080"
+			}
+			return dialer.DialContext(ctx, network, addr)
+		},
+	}
+}
+
 func newClient() *http.Client {
 	jar, _ := cookiejar.New(nil)
 	return &http.Client{
-		Jar:     jar,
-		Timeout: 30 * time.Second,
+		Transport: customTransport(),
+		Jar:       jar,
+		Timeout:   30 * time.Second,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse // Don't follow redirects
 		},
@@ -52,8 +70,9 @@ func newClient() *http.Client {
 func newFollowingClient() *http.Client {
 	jar, _ := cookiejar.New(nil)
 	return &http.Client{
-		Jar:     jar,
-		Timeout: 30 * time.Second,
+		Transport: customTransport(),
+		Jar:       jar,
+		Timeout:   30 * time.Second,
 	}
 }
 
