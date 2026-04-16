@@ -80,9 +80,12 @@ else
     echo "  Team user invite: $INVITE_BODY"
 fi
 
-# Extract invitation ID and accept it
+# Extract invitation ID and required tokens and accept it
 INVITE_ID=$(echo "$INVITE_BODY" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$INVITE_ID" ]; then
+INVITER_ID=$(echo "$INVITE_BODY" | grep -o 'inviterId=[^&"]*' | cut -d= -f2)
+INVITEE_ID=$(echo "$INVITE_BODY" | grep -o 'inviteeId=[^&"]*' | cut -d= -f2)
+
+if [ -n "$INVITE_ID" ] && [ -n "$INVITER_ID" ] && [ -n "$INVITEE_ID" ]; then
   echo "→ Accepting invitation: ${INVITE_ID}..."
   ACCEPT_RESPONSE=$(curl -s -X POST "${N8N_URL}/rest/invitations/${INVITE_ID}/accept" \
     -w "\nHTTP_STATUS:%{http_code}" \
@@ -90,7 +93,9 @@ if [ -n "$INVITE_ID" ]; then
     -d "{
       \"firstName\": \"${TEAM_FIRST}\",
       \"lastName\": \"${TEAM_LAST}\",
-      \"password\": \"${TEAM_PASSWORD}\"
+      \"password\": \"${TEAM_PASSWORD}\",
+      \"inviterId\": \"${INVITER_ID}\",
+      \"inviteeId\": \"${INVITEE_ID}\"
     }" || true)
   
   if echo "$ACCEPT_RESPONSE" | grep -q "HTTP_STATUS:200"; then
