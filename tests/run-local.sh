@@ -203,13 +203,9 @@ if [ "$TEST_SCOPE" = "all" ] || [ "$TEST_SCOPE" = "unit" ]; then
   go vet ./...
 
   step "Running unit tests with race detector..."
-  if go test -v -race -count=1 -coverprofile=coverage.out -timeout 120s ./...; then
+  if go test -v -race -count=1 -cover -timeout 120s ./...; then
     UNIT_RESULT="passed"
     success "All unit tests PASSED"
-
-    # Coverage summary
-    step "Coverage summary:"
-    go tool cover -func=coverage.out | tail -1
   else
     UNIT_RESULT="failed"
     fail "Unit tests FAILED"
