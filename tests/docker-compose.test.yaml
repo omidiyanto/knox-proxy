@@ -14,6 +14,7 @@ services:
     image: quay.io/keycloak/keycloak:26.0
     command: start-dev --import-realm --health-enabled=true
     environment:
+      KC_HOSTNAME: ${HOST_IP:-127.0.0.1}
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
     volumes:
@@ -132,15 +133,16 @@ services:
     ports:
       - "8443:8443"
     environment:
-      - PROXY_PORT=8443
+      - SERVER_PORT=8443
+      - KNOX_PROXY_LOG_LEVEL=debug
       - N8N_BACKEND_URL=http://nginx-knox:80
       - N8N_INTERNAL_URL=http://n8n:5678
-      - OIDC_ISSUER_URL=http://keycloak:8080/realms/knox-test
+      - OIDC_ISSUER_URL=http://${HOST_IP:-127.0.0.1}:8080/realms/knox-test
       - OIDC_CLIENT_ID=knox-test
       - OIDC_CLIENT_SECRET=knox-test-secret
-      - OIDC_REDIRECT_URL=http://localhost:8443/auth/callback
+      - OIDC_REDIRECT_URL=http://${HOST_IP:-127.0.0.1}:8443/auth/callback
       - KEYCLOAK_GROUP_PREFIX=/n8n-test-
-      - N8N_TEAM_CREDENTIALS={"testteam":{"email":"test@local","pass":"testPass123"}}
+      - N8N_TEAM_CREDENTIALS={"testteam":{"email":"test@knox-ci.local","pass":"testPass123"}}
       - JIT_DATABASE_URL=postgres://knox:knoxTestPass@knox-db:5432/knox?sslmode=disable
       - KNOX_API_KEY=test-api-key-for-ci
       - COOKIE_TTL=300

@@ -183,7 +183,16 @@ for cmd in curl jq; do
 done
 success "curl + jq installed"
 
-info "Project root: $PROJECT_ROOT"
+# Ensure we run from the project root
+cd "$(dirname "$0")/.."
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export HOST_IP=$(ipconfig getifaddr en0 2>/dev/null || echo "127.0.0.1")
+else
+  export HOST_IP=$(hostname -I | awk '{print $1}')
+  [ -z "$HOST_IP" ] && export HOST_IP="127.0.0.1"
+fi
+
 info "n8n version: $N8N_VERSION"
 info "Test scope: $TEST_SCOPE"
 
