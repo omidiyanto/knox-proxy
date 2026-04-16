@@ -42,15 +42,20 @@ echo "  Owner setup: $SETUP_RESPONSE"
 echo "→ Logging in as owner..."
 COOKIE_JAR=$(mktemp)
 
-LOGIN_RESPONSE=$(curl -sf -c "$COOKIE_JAR" -X POST "${N8N_URL}/rest/login" \
+# Remove -f so we can capture the actual HTTP error body if it fails
+LOGIN_RESPONSE=$(curl -s -c "$COOKIE_JAR" -w "\nHTTP_STATUS:%{http_code}" -X POST "${N8N_URL}/rest/login" \
   -H "Content-Type: application/json" \
   -d "{
     \"email\": \"${OWNER_EMAIL}\",
     \"password\": \"${OWNER_PASSWORD}\"
-  }" 2>/dev/null)
+  }" || true)
 
-if [ -z "$LOGIN_RESPONSE" ]; then
-  echo "✗ Failed to login as owner"
+HTTP_STATUS=$(echo "$LOGIN_RESPONSE" | grep -o "HTTP_STATUS:[0-9]*" | cut -d':' -f2)
+LOGIN_BODY=$(echo "$LOGIN_RESPONSE" | sed 's/HTTP_STATUS:[0-9]*//g')
+
+if [ "$HTTP_STATUS" != "200" ]; then
+  echo "✗ Failed to login as owner (HTTP $HTTP_STATUS)"
+  echo "  Response: $LOGIN_BODY"
   rm -f "$COOKIE_JAR"
   exit 1
 fi
@@ -58,34 +63,47 @@ echo "  ✓ Logged in as owner"
 
 # ── Step 3: Create team user ───────────────────────────────────────────────
 echo "→ Creating team user: ${TEAM_EMAIL}..."
-INVITE_RESPONSE=$(curl -sf -b "$COOKIE_JAR" -X POST "${N8N_URL}/rest/invitations" \
+INVITE_RESPONSE=$(curl -s -b "$COOKIE_JAR" -w "\nHTTP_STATUS:%{http_code}" -X POST "${N8N_URL}/rest/invitations" \
   -H "Content-Type: application/json" \
   -d "[{
     \"email\": \"${TEAM_EMAIL}\",
     \"role\": \"global:member\"
-  }]" 2>/dev/null || echo '{"exists":"true"}')
+  }]" || true)
 
-echo "  Team user invite: $INVITE_RESPONSE"
+HTTP_STATUS=$(echo "$INVITE_RESPONSE" | grep -o "HTTP_STATUS:[0-9]*" | cut -d':' -f2)
+INVITE_BODY=$(echo "$INVITE_RESPONSE" | sed 's/HTTP_STATUS:[0-9]*//g')
+
+if [ "$HTTP_STATUS" != "200" ]; then
+    echo "  Team user invite failed (HTTP $HTTP_STATUS): $INVITE_BODY"
+else
+    echo "  Team user invite: $INVITE_BODY"
+fi
 
 # Extract invitation ID and accept it
-INVITE_ID=$(echo "$INVITE_RESPONSE" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+INVITE_ID=$(echo "$INVITE_BODY" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
 if [ -n "$INVITE_ID" ]; then
   echo "→ Accepting invitation: ${INVITE_ID}..."
-  curl -sf -X POST "${N8N_URL}/rest/invitations/${INVITE_ID}/accept" \
+  ACCEPT_RESPONSE=$(curl -s -X POST "${N8N_URL}/rest/invitations/${INVITE_ID}/accept" \
+    -w "\nHTTP_STATUS:%{http_code}" \
     -H "Content-Type: application/json" \
     -d "{
       \"firstName\": \"${TEAM_FIRST}\",
       \"lastName\": \"${TEAM_LAST}\",
       \"password\": \"${TEAM_PASSWORD}\"
-    }" 2>/dev/null || true
-  echo "  ✓ Team user created"
+    }" || true)
+  
+  if echo "$ACCEPT_RESPONSE" | grep -q "HTTP_STATUS:200"; then
+    echo "  ✓ Team user created"
+  else
+    echo "  ✗ Failed to accept test team invite: $ACCEPT_RESPONSE"
+  fi
 else
   echo "  ℹ Team user may already exist"
 fi
 
 # ── Step 4: Create a sample workflow ───────────────────────────────────────
 echo "→ Creating sample workflow..."
-WF_RESPONSE=$(curl -sf -b "$COOKIE_JAR" -X POST "${N8N_URL}/rest/workflows" \
+WF_RESPONSE=$(curl -s -b "$COOKIE_JAR" -w "\nHTTP_STATUS:%{http_code}" -X POST "${N8N_URL}/rest/workflows" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Knox CI Test Workflow",
@@ -117,9 +135,9 @@ WF_RESPONSE=$(curl -sf -b "$COOKIE_JAR" -X POST "${N8N_URL}/rest/workflows" \
     },
     "settings": {},
     "staticData": null
-  }' 2>/dev/null || echo '{}')
+  }' || true)
 
-WORKFLOW_ID=$(echo "$WF_RESPONSE" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+WORKFLOW_ID=$(echo "$WF_RESPONSE" | head -n -1 | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
 
 if [ -n "$WORKFLOW_ID" ]; then
   echo "  ✓ Workflow created: ${WORKFLOW_ID}"
