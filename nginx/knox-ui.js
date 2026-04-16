@@ -112,20 +112,20 @@
       '<input type="text" class="knox-input' + autoClass + '" id="knox-workflow-id" ' +
       'placeholder="e.g., AUqnl095YhDTo47d" value="' + wfId + '">' +
       '</div>' +
-      '<div class="knox-form-group">' +
-      '<label class="knox-label">Access Type</label>' +
-      '<div class="knox-checkbox-group">' +
-      '<label class="knox-checkbox-label">' +
-      '<input type="checkbox" name="knox-access" value="run" checked> ' +
-      '<span>Run</span>' +
-      '</label>' +
       (window.__KNOX_JIT_EDIT__ ?
+        '<div class="knox-form-group">' +
+        '<label class="knox-label">Access Type</label>' +
+        '<div class="knox-checkbox-group">' +
+        '<label class="knox-checkbox-label">' +
+        '<input type="checkbox" name="knox-access" value="run" checked> ' +
+        '<span>Run</span>' +
+        '</label>' +
         '<label class="knox-checkbox-label">' +
         '<input type="checkbox" name="knox-access" value="edit"> ' +
         '<span>Edit</span>' +
-        '</label>' : '') +
-      '</div>' +
-      '</div>' +
+        '</label>' +
+        '</div>' +
+        '</div>' : '') +
       '<div class="knox-form-group">' +
       '<label class="knox-label">Request Period</label>' +
       '<div class="knox-date-row">' +

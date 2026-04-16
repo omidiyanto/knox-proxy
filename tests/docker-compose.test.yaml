@@ -143,7 +143,7 @@ services:
       - OIDC_CLIENT_SECRET=knox-test-secret
       - OIDC_REDIRECT_URL=http://localhost:8443/auth/callback
       - KEYCLOAK_GROUP_PREFIX=/n8n-test-
-      - N8N_TEAM_CREDENTIALS={"testteam":{"email":"test@local","pass":"testPass123"}}
+      - N8N_TEAM_CREDENTIALS={"admin":{"email":"admin@local.com","pass":"testPass123"}}
       - JIT_DATABASE_URL=postgres://knox:knoxTestPass@knox-db:5432/knox?sslmode=disable
       - KNOX_API_KEY=test-api-key-for-ci
       - COOKIE_TTL=300
