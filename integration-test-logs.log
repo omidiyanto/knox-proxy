@@ -1,0 +1,564 @@
+keycloak-1  | Updating the configuration and installing your custom providers, if any. Please wait.
+keycloak-1  | 2026-04-16 03:19:44,673 INFO  [io.qua.dep.QuarkusAugmentor] (main) Quarkus augmentation completed in 9676ms
+keycloak-1  | 2026-04-16 03:19:50,001 INFO  [org.keycloak.quarkus.runtime.storage.infinispan.CacheManagerFactory] (main) Starting Infinispan embedded cache manager
+keycloak-1  | 2026-04-16 03:19:50,151 INFO  [org.keycloak.quarkus.runtime.storage.infinispan.CacheManagerFactory] (main) Persistent user sessions enabled and no memory limit found in configuration. Setting max entries for sessions to 10000 entries.
+keycloak-1  | 2026-04-16 03:19:50,151 INFO  [org.keycloak.quarkus.runtime.storage.infinispan.CacheManagerFactory] (main) Persistent user sessions enabled and no memory limit found in configuration. Setting max entries for clientSessions to 10000 entries.
+keycloak-1  | 2026-04-16 03:19:50,151 INFO  [org.keycloak.quarkus.runtime.storage.infinispan.CacheManagerFactory] (main) Persistent user sessions enabled and no memory limit found in configuration. Setting max entries for offlineSessions to 10000 entries.
+keycloak-1  | 2026-04-16 03:19:50,151 INFO  [org.keycloak.quarkus.runtime.storage.infinispan.CacheManagerFactory] (main) Persistent user sessions enabled and no memory limit found in configuration. Setting max entries for offlineClientSessions to 10000 entries.
+keycloak-1  | 2026-04-16 03:19:50,483 INFO  [org.infinispan.CONTAINER] (ForkJoinPool.commonPool-worker-1) ISPN000556: Starting user marshaller 'org.infinispan.commons.marshall.ImmutableProtoStreamMarshaller'
+keycloak-1  | 2026-04-16 03:19:51,905 INFO  [org.keycloak.quarkus.runtime.storage.database.liquibase.QuarkusJpaUpdaterProvider] (main) Initializing database schema. Using changelog META-INF/jpa-changelog-master.xml
+keycloak-1  | 
+keycloak-1  | UPDATE SUMMARY
+keycloak-1  | Run:                        148
+keycloak-1  | Previously run:               0
+keycloak-1  | Filtered out:                 0
+keycloak-1  | -------------------------------
+keycloak-1  | Total change sets:          148
+keycloak-1  | 
+keycloak-1  | 2026-04-16 03:19:54,391 WARN  [io.agroal.pool] (main) Datasource '<default>': JDBC resources leaked: 1 ResultSet(s) and 0 Statement(s)
+keycloak-1  | 2026-04-16 03:19:54,764 INFO  [org.keycloak.connections.infinispan.DefaultInfinispanConnectionProviderFactory] (main) Node name: node_845898, Site name: null
+keycloak-1  | 2026-04-16 03:19:54,944 INFO  [org.keycloak.broker.provider.AbstractIdentityProviderMapper] (main) Registering class org.keycloak.broker.provider.mappersync.ConfigSyncEventListener
+keycloak-1  | 2026-04-16 03:19:55,002 INFO  [org.keycloak.exportimport.dir.DirImportProvider] (main) Importing from directory /opt/keycloak/bin/../data/import
+keycloak-1  | 2026-04-16 03:19:55,006 INFO  [org.keycloak.services] (main) KC-SERVICES0050: Initializing master realm
+keycloak-1  | 2026-04-16 03:19:56,813 INFO  [org.keycloak.services] (main) KC-SERVICES0030: Full model import requested. Strategy: OVERWRITE_EXISTING
+keycloak-1  | 2026-04-16 03:19:59,827 INFO  [org.keycloak.exportimport.util.ImportUtils] (main) Realm 'knox-test' imported
+keycloak-1  | 2026-04-16 03:19:59,851 INFO  [org.keycloak.services] (main) KC-SERVICES0032: Import finished successfully
+keycloak-1  | 2026-04-16 03:19:59,851 WARN  [org.keycloak.services] (main) KC-SERVICES0110: Environment variable 'KEYCLOAK_ADMIN' is deprecated, use 'KC_BOOTSTRAP_ADMIN_USERNAME' instead
+keycloak-1  | 2026-04-16 03:19:59,851 WARN  [org.keycloak.services] (main) KC-SERVICES0110: Environment variable 'KEYCLOAK_ADMIN_PASSWORD' is deprecated, use 'KC_BOOTSTRAP_ADMIN_PASSWORD' instead
+keycloak-1  | 2026-04-16 03:19:59,915 INFO  [org.keycloak.services] (main) KC-SERVICES0077: Created temporary admin user with username admin
+keycloak-1  | 2026-04-16 03:19:59,967 WARN  [io.agroal.pool] (main) Datasource '<default>': JDBC resources leaked: 1 ResultSet(s) and 0 Statement(s)
+keycloak-1  | 2026-04-16 03:20:00,065 INFO  [io.quarkus] (main) Keycloak 26.0.8 on JVM (powered by Quarkus 3.15.1) started in 15.178s. Listening on: http://0.0.0.0:8080
+keycloak-1  | 2026-04-16 03:20:00,065 INFO  [io.quarkus] (main) Profile dev activated. 
+keycloak-1  | 2026-04-16 03:20:00,065 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-h2, keycloak, narayana-jta, opentelemetry, reactive-routes, rest, rest-jackson, smallrye-context-propagation, vertx]
+keycloak-1  | 2026-04-16 03:20:00,071 WARN  [org.keycloak.quarkus.runtime.KeycloakMain] (main) Running the server in development mode. DO NOT use this configuration in production.
+nginx-knox-1  | [knox-entrypoint] JIT UI ENABLED
+nginx-knox-1  | [knox-entrypoint] JIT Edit checkbox ENABLED
+nginx-knox-1  | [knox-entrypoint] Watermark ENABLED
+nginx-knox-1  | [knox-entrypoint] Starting nginx...
+n8n-1         | No encryption key found - Auto-generating and saving to: /home/node/.n8n/config
+n8n-1         | Initializing n8n process
+n8n-1         | n8n ready on ::, port 5678
+n8n-1         | Migrations in progress, please do NOT stop the process.
+n8n-1         | Starting migration InitialMigration1587669153312
+n8n-1         | Finished migration InitialMigration1587669153312
+n8n-1         | Starting migration WebhookModel1589476000887
+n8n-1         | Finished migration WebhookModel1589476000887
+n8n-1         | Starting migration CreateIndexStoppedAt1594828256133
+n8n-1         | Finished migration CreateIndexStoppedAt1594828256133
+n8n-1         | Starting migration MakeStoppedAtNullable1607431743768
+n8n-1         | Finished migration MakeStoppedAtNullable1607431743768
+n8n-1         | Starting migration AddWebhookId1611144599516
+n8n-1         | Finished migration AddWebhookId1611144599516
+n8n-1         | Starting migration CreateTagEntity1617270242566
+n8n-1           | Finished migration CreateTagEntity1617270242566
+n8n-postgres-1  | The files belonging to this database system will be owned by user "postgres".
+n8n-postgres-1  | This user must also own the server process.
+n8n-postgres-1  | 
+n8n-postgres-1  | The database cluster will be initialized with locale "en_US.utf8".
+n8n-postgres-1  | The default database encoding has accordingly been set to "UTF8".
+n8n-postgres-1  | The default text search configuration will be set to "english".
+n8n-postgres-1  | 
+n8n-postgres-1  | Data page checksums are disabled.
+knox-db-1       | The files belonging to this database system will be owned by user "postgres".
+n8n-1           | Starting migration UniqueWorkflowNames1620824779533
+knox-db-1       | This user must also own the server process.
+n8n-1           | Finished migration UniqueWorkflowNames1620824779533
+n8n-postgres-1  | 
+n8n-1           | Starting migration AddwaitTill1626176912946
+n8n-1           | Finished migration AddwaitTill1626176912946
+n8n-postgres-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+n8n-1           | Starting migration UpdateWorkflowCredentials1630419189837
+knox-db-1       | 
+knox-db-1       | The database cluster will be initialized with locale "en_US.utf8".
+knox-db-1       | The default database encoding has accordingly been set to "UTF8".
+knox-db-1       | The default text search configuration will be set to "english".
+knox-db-1       | 
+knox-db-1       | Data page checksums are disabled.
+knox-db-1       | 
+knox-db-1       | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+n8n-1           | Finished migration UpdateWorkflowCredentials1630419189837
+n8n-1           | Starting migration AddExecutionEntityIndexes1644422880309
+n8n-1           | Finished migration AddExecutionEntityIndexes1644422880309
+n8n-1           | Starting migration IncreaseTypeVarcharLimit1646834195327
+n8n-1           | Finished migration IncreaseTypeVarcharLimit1646834195327
+n8n-1           | Starting migration CreateUserManagement1646992772331
+n8n-1           | Finished migration CreateUserManagement1646992772331
+n8n-1           | Starting migration LowerCaseUserEmail1648740597343
+n8n-1           | Finished migration LowerCaseUserEmail1648740597343
+n8n-1           | Starting migration CommunityNodes1652254514002
+n8n-1           | Finished migration CommunityNodes1652254514002
+n8n-1           | Starting migration AddUserSettings1652367743993
+n8n-1           | Finished migration AddUserSettings1652367743993
+knox-db-1       | creating subdirectories ... ok
+knox-db-1       | selecting dynamic shared memory implementation ... posix
+knox-db-1       | selecting default "max_connections" ... 100
+knox-db-1       | selecting default "shared_buffers" ... 128MB
+knox-db-1       | selecting default time zone ... UTC
+knox-db-1       | creating configuration files ... ok
+knox-db-1       | running bootstrap script ... ok
+knox-db-1       | sh: locale: not found
+knox-db-1       | 2026-04-16 03:19:33.183 UTC [35] WARNING:  no usable system locales were found
+knox-db-1       | performing post-bootstrap initialization ... ok
+knox-db-1       | syncing data to disk ... ok
+knox-db-1       | 
+knox-db-1       | initdb: warning: enabling "trust" authentication for local connections
+knox-db-1       | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+knox-db-1       | 
+knox-db-1       | Success. You can now start the database server using:
+knox-db-1       | 
+knox-db-1       |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+knox-db-1       | 
+knox-db-1       | waiting for server to start....2026-04-16 03:19:34.088 UTC [41] LOG:  starting PostgreSQL 17.9 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+knox-db-1       | 2026-04-16 03:19:34.090 UTC [41] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+knox-db-1       | 2026-04-16 03:19:34.094 UTC [44] LOG:  database system was shut down at 2026-04-16 03:19:33 UTC
+knox-db-1       | 2026-04-16 03:19:34.100 UTC [41] LOG:  database system is ready to accept connections
+knox-db-1       |  done
+knox-db-1       | server started
+knox-db-1       | CREATE DATABASE
+knox-db-1       | 
+knox-db-1       | 
+knox-db-1       | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+knox-db-1       | 
+knox-db-1       | waiting for server to shut down...2026-04-16 03:19:34.295 UTC [41] LOG:  received fast shutdown request
+knox-db-1       | .2026-04-16 03:19:34.296 UTC [41] LOG:  aborting any active transactions
+knox-db-1       | 2026-04-16 03:19:34.306 UTC [41] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+knox-db-1       | 2026-04-16 03:19:34.309 UTC [42] LOG:  shutting down
+knox-db-1       | 2026-04-16 03:19:34.310 UTC [42] LOG:  checkpoint starting: shutdown immediate
+knox-db-1       | 2026-04-16 03:19:34.338 UTC [42] LOG:  checkpoint complete: wrote 925 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.022 s, sync=0.004 s, total=0.029 s; sync files=301, longest=0.003 s, average=0.001 s; distance=4255 kB, estimate=4255 kB; lsn=0/19150D0, redo lsn=0/19150D0
+knox-db-1       | 2026-04-16 03:19:34.363 UTC [41] LOG:  database system is shut down
+knox-db-1       |  done
+knox-db-1       | server stopped
+knox-db-1       | 
+knox-db-1       | PostgreSQL init process complete; ready for start up.
+knox-db-1       | 
+knox-db-1       | 2026-04-16 03:19:34.429 UTC [1] LOG:  starting PostgreSQL 17.9 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+knox-db-1       | 2026-04-16 03:19:34.429 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+knox-db-1       | 2026-04-16 03:19:34.429 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+knox-db-1       | 2026-04-16 03:19:34.430 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+knox-db-1       | 2026-04-16 03:19:34.434 UTC [57] LOG:  database system was shut down at 2026-04-16 03:19:34 UTC
+knox-db-1       | 2026-04-16 03:19:34.440 UTC [1] LOG:  database system is ready to accept connections
+knox-db-1       | 2026-04-16 03:24:34.532 UTC [55] LOG:  checkpoint starting: time
+knox-db-1       | 2026-04-16 03:24:38.945 UTC [55] LOG:  checkpoint complete: wrote 47 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.409 s, sync=0.003 s, total=4.414 s; sync files=12, longest=0.003 s, average=0.001 s; distance=270 kB, estimate=270 kB; lsn=0/1958A20, redo lsn=0/1958990
+n8n-postgres-1  | creating subdirectories ... ok
+n8n-postgres-1  | selecting dynamic shared memory implementation ... posix
+n8n-postgres-1  | selecting default "max_connections" ... 100
+n8n-postgres-1  | selecting default "shared_buffers" ... 128MB
+n8n-postgres-1  | selecting default time zone ... UTC
+n8n-postgres-1  | creating configuration files ... ok
+n8n-postgres-1  | running bootstrap script ... ok
+n8n-postgres-1  | sh: locale: not found
+n8n-postgres-1  | 2026-04-16 03:19:33.175 UTC [35] WARNING:  no usable system locales were found
+n8n-postgres-1  | performing post-bootstrap initialization ... ok
+n8n-postgres-1  | syncing data to disk ... ok
+n8n-postgres-1  | 
+n8n-postgres-1  | 
+n8n-postgres-1  | Success. You can now start the database server using:
+n8n-postgres-1  | 
+n8n-postgres-1  |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+n8n-postgres-1  | 
+n8n-postgres-1  | initdb: warning: enabling "trust" authentication for local connections
+n8n-postgres-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+n8n-postgres-1  | waiting for server to start....2026-04-16 03:19:34.078 UTC [41] LOG:  starting PostgreSQL 17.9 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+n8n-postgres-1  | 2026-04-16 03:19:34.079 UTC [41] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+n8n-postgres-1  | 2026-04-16 03:19:34.084 UTC [44] LOG:  database system was shut down at 2026-04-16 03:19:33 UTC
+n8n-postgres-1  | 2026-04-16 03:19:34.089 UTC [41] LOG:  database system is ready to accept connections
+n8n-postgres-1  |  done
+n8n-postgres-1  | server started
+n8n-postgres-1  | CREATE DATABASE
+n8n-postgres-1  | 
+n8n-postgres-1  | 
+n8n-postgres-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+n8n-1           | Starting migration AddAPIKeyColumn1652905585850
+n8n-1           | Finished migration AddAPIKeyColumn1652905585850
+n8n-1           | Starting migration IntroducePinData1654090467022
+n8n-1           | Finished migration IntroducePinData1654090467022
+n8n-1           | Starting migration AddNodeIds1658932090381
+n8n-1           | Finished migration AddNodeIds1658932090381
+n8n-1           | Starting migration AddJsonKeyPinData1659902242948
+n8n-1           | Finished migration AddJsonKeyPinData1659902242948
+n8n-1           | Starting migration CreateCredentialsUserRole1660062385367
+n8n-1           | Finished migration CreateCredentialsUserRole1660062385367
+n8n-1           | Starting migration CreateWorkflowsEditorRole1663755770893
+n8n-1           | Finished migration CreateWorkflowsEditorRole1663755770893
+n8n-1           | Starting migration WorkflowStatistics1664196174001
+n8n-1           | Finished migration WorkflowStatistics1664196174001
+n8n-1           | Starting migration CreateCredentialUsageTable1665484192212
+n8n-1           | Finished migration CreateCredentialUsageTable1665484192212
+n8n-1           | Starting migration RemoveCredentialUsageTable1665754637025
+n8n-1           | Finished migration RemoveCredentialUsageTable1665754637025
+vault-1         | ==> Vault server configuration:
+n8n-1           | Starting migration AddWorkflowVersionIdColumn1669739707126
+n8n-1           | Finished migration AddWorkflowVersionIdColumn1669739707126
+vault-1         | 
+vault-1         | Administrative Namespace: 
+vault-1         |              Api Address: http://0.0.0.0:8200
+vault-1         |                      Cgo: disabled
+vault-1         |          Cluster Address: https://0.0.0.0:8201
+vault-1         |    Environment Variables: GOTRACEBACK, HOME, HOSTNAME, NAME, PATH, PWD, SHLVL, VAULT_ADDR, VAULT_DEV_LISTEN_ADDRESS, VAULT_DEV_ROOT_TOKEN_ID, VERSION
+vault-1         |               Go Version: go1.22.7
+vault-1         |               Listener 1: tcp (addr: "0.0.0.0:8200", cluster address: "0.0.0.0:8201", disable_request_limiter: "false", max_request_duration: "1m30s", max_request_size: "33554432", tls: "disabled")
+vault-1         |                Log Level: 
+vault-1         |                    Mlock: supported: true, enabled: false
+vault-1         |            Recovery Mode: false
+vault-1         |                  Storage: inmem
+vault-1         |                  Version: Vault v1.17.6, built 2024-09-24T19:48:40Z
+vault-1         |              Version Sha: 69a720d5d940bfcd590d7c24f3c98f178673d796
+vault-1         | 
+vault-1         | ==> Vault server started! Log data will stream in below:
+vault-1         | 
+vault-1         | 2026-04-16T03:19:33.777Z [INFO]  proxy environment: http_proxy="" https_proxy="" no_proxy=""
+vault-1         | 2026-04-16T03:19:33.778Z [INFO]  incrementing seal generation: generation=1
+vault-1         | 2026-04-16T03:19:33.778Z [WARN]  no `api_addr` value specified in config or in VAULT_API_ADDR; falling back to detection if possible, but this value should be manually set
+vault-1         | 2026-04-16T03:19:33.778Z [INFO]  core: Initializing version history cache for core
+vault-1         | 2026-04-16T03:19:33.778Z [INFO]  events: Starting event system
+n8n-1           | Starting migration AddTriggerCountColumn1669823906995
+vault-1         | 2026-04-16T03:19:33.781Z [INFO]  core: security barrier not initialized
+vault-1         | 2026-04-16T03:19:33.781Z [INFO]  core: security barrier initialized: stored=1 shares=1 threshold=1
+vault-1         | 2026-04-16T03:19:33.782Z [INFO]  core: post-unseal setup starting
+n8n-1           | Finished migration AddTriggerCountColumn1669823906995
+n8n-1           | Starting migration MessageEventBusDestinations1671535397530
+n8n-1           | Finished migration MessageEventBusDestinations1671535397530
+n8n-1           | Starting migration RemoveWorkflowDataLoadedFlag1671726148421
+n8n-1           | Finished migration RemoveWorkflowDataLoadedFlag1671726148421
+n8n-1           | Starting migration DeleteExecutionsWithWorkflows1673268682475
+n8n-1           | Finished migration DeleteExecutionsWithWorkflows1673268682475
+n8n-1           | Starting migration AddStatusToExecutions1674138566000
+n8n-1           | Finished migration AddStatusToExecutions1674138566000
+n8n-1           | Starting migration CreateLdapEntities1674509946020
+n8n-1           | Finished migration CreateLdapEntities1674509946020
+n8n-1           | Starting migration PurgeInvalidWorkflowConnections1675940580449
+n8n-1           | Finished migration PurgeInvalidWorkflowConnections1675940580449
+n8n-1           | Starting migration MigrateExecutionStatus1676996103000
+n8n-1           | Finished migration MigrateExecutionStatus1676996103000
+n8n-postgres-1  | 
+n8n-postgres-1  | waiting for server to shut down....2026-04-16 03:19:34.259 UTC [41] LOG:  received fast shutdown request
+vault-1         | 2026-04-16T03:19:33.795Z [INFO]  core: loaded wrapping token key
+n8n-postgres-1  | 2026-04-16 03:19:34.260 UTC [41] LOG:  aborting any active transactions
+vault-1         | 2026-04-16T03:19:33.795Z [INFO]  core: successfully setup plugin runtime catalog
+vault-1         | 2026-04-16T03:19:33.795Z [INFO]  core: successfully setup plugin catalog: plugin-directory=""
+vault-1         | 2026-04-16T03:19:33.796Z [INFO]  core: no mounts; adding default mount table
+vault-1         | 2026-04-16T03:19:33.797Z [INFO]  core: successfully mounted: type=cubbyhole version="v1.17.6+builtin.vault" path=cubbyhole/ namespace="ID: root. Path: "
+vault-1         | 2026-04-16T03:19:33.798Z [INFO]  core: successfully mounted: type=system version="v1.17.6+builtin.vault" path=sys/ namespace="ID: root. Path: "
+vault-1         | 2026-04-16T03:19:33.798Z [INFO]  core: successfully mounted: type=identity version="v1.17.6+builtin.vault" path=identity/ namespace="ID: root. Path: "
+vault-1         | 2026-04-16T03:19:33.800Z [INFO]  core: successfully mounted: type=token version="v1.17.6+builtin.vault" path=token/ namespace="ID: root. Path: "
+n8n-postgres-1  | 2026-04-16 03:19:34.267 UTC [41] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+n8n-postgres-1  | 2026-04-16 03:19:34.274 UTC [42] LOG:  shutting down
+n8n-postgres-1  | 2026-04-16 03:19:34.275 UTC [42] LOG:  checkpoint starting: shutdown immediate
+n8n-postgres-1  | 2026-04-16 03:19:34.311 UTC [42] LOG:  checkpoint complete: wrote 925 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.030 s, sync=0.004 s, total=0.037 s; sync files=301, longest=0.003 s, average=0.001 s; distance=4255 kB, estimate=4255 kB; lsn=0/19150D0, redo lsn=0/19150D0
+n8n-postgres-1  | 2026-04-16 03:19:34.326 UTC [41] LOG:  database system is shut down
+n8n-postgres-1  |  done
+n8n-postgres-1  | server stopped
+n8n-postgres-1  | 
+n8n-postgres-1  | PostgreSQL init process complete; ready for start up.
+n8n-postgres-1  | 
+n8n-postgres-1  | 2026-04-16 03:19:34.389 UTC [1] LOG:  starting PostgreSQL 17.9 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+n8n-postgres-1  | 2026-04-16 03:19:34.389 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+n8n-postgres-1  | 2026-04-16 03:19:34.389 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+n8n-postgres-1  | 2026-04-16 03:19:34.391 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+n8n-postgres-1  | 2026-04-16 03:19:34.396 UTC [57] LOG:  database system was shut down at 2026-04-16 03:19:34 UTC
+n8n-postgres-1  | 2026-04-16 03:19:34.403 UTC [1] LOG:  database system is ready to accept connections
+n8n-postgres-1  | 2026-04-16 03:24:34.495 UTC [55] LOG:  checkpoint starting: time
+n8n-postgres-1  | 2026-04-16 03:25:17.503 UTC [55] LOG:  checkpoint complete: wrote 432 buffers (2.6%); 1 WAL file(s) added, 0 removed, 0 recycled; write=42.988 s, sync=0.005 s, total=43.009 s; sync files=643, longest=0.001 s, average=0.001 s; distance=4165 kB, estimate=4165 kB; lsn=0/1D265D8, redo lsn=0/1D26548
+n8n-1           | Starting migration UpdateRunningExecutionStatus1677236854063
+n8n-1           | Finished migration UpdateRunningExecutionStatus1677236854063
+n8n-1           | Starting migration CreateVariables1677501636754
+n8n-1           | Finished migration CreateVariables1677501636754
+n8n-1           | Starting migration CreateExecutionMetadataTable1679416281778
+n8n-1           | Finished migration CreateExecutionMetadataTable1679416281778
+n8n-1           | Starting migration AddUserActivatedProperty1681134145996
+n8n-1           | Finished migration AddUserActivatedProperty1681134145996
+n8n-1           | Starting migration RemoveSkipOwnerSetup1681134145997
+n8n-1           | Finished migration RemoveSkipOwnerSetup1681134145997
+n8n-1           | Starting migration MigrateIntegerKeysToString1690000000000
+n8n-1           | Finished migration MigrateIntegerKeysToString1690000000000
+n8n-1           | Starting migration SeparateExecutionData1690000000020
+n8n-1           | Finished migration SeparateExecutionData1690000000020
+n8n-1           | Starting migration RemoveResetPasswordColumns1690000000030
+n8n-1           | Finished migration RemoveResetPasswordColumns1690000000030
+n8n-1           | Starting migration AddMfaColumns1690000000030
+n8n-1           | Finished migration AddMfaColumns1690000000030
+n8n-1           | Starting migration AddMissingPrimaryKeyOnExecutionData1690787606731
+n8n-1           | Finished migration AddMissingPrimaryKeyOnExecutionData1690787606731
+n8n-1           | Starting migration CreateWorkflowNameIndex1691088862123
+n8n-1           | Finished migration CreateWorkflowNameIndex1691088862123
+n8n-1           | Starting migration CreateWorkflowHistoryTable1692967111175
+n8n-1           | Finished migration CreateWorkflowHistoryTable1692967111175
+n8n-1           | Starting migration ExecutionSoftDelete1693491613982
+n8n-1           | Finished migration ExecutionSoftDelete1693491613982
+n8n-1           | Starting migration DisallowOrphanExecutions1693554410387
+n8n-1           | Finished migration DisallowOrphanExecutions1693554410387
+n8n-1           | Starting migration MigrateToTimestampTz1694091729095
+n8n-1           | Finished migration MigrateToTimestampTz1694091729095
+n8n-1           | Starting migration AddWorkflowMetadata1695128658538
+n8n-1           | Finished migration AddWorkflowMetadata1695128658538
+n8n-1           | Starting migration ModifyWorkflowHistoryNodesAndConnections1695829275184
+n8n-1           | Finished migration ModifyWorkflowHistoryNodesAndConnections1695829275184
+n8n-1           | Starting migration AddGlobalAdminRole1700571993961
+n8n-1           | Finished migration AddGlobalAdminRole1700571993961
+n8n-1           | Starting migration DropRoleMapping1705429061930
+n8n-1           | Finished migration DropRoleMapping1705429061930
+n8n-1           | Starting migration RemoveFailedExecutionStatus1711018413374
+n8n-1           | Finished migration RemoveFailedExecutionStatus1711018413374
+n8n-1           | Starting migration MoveSshKeysToDatabase1711390882123
+n8n-1           | [MoveSshKeysToDatabase1711390882123] No SSH keys in filesystem, skipping
+n8n-1           | Finished migration MoveSshKeysToDatabase1711390882123
+n8n-1           | Starting migration RemoveNodesAccess1712044305787
+n8n-1           | Finished migration RemoveNodesAccess1712044305787
+n8n-1           | Starting migration CreateProject1714133768519
+n8n-1           | Finished migration CreateProject1714133768519
+n8n-1           | Starting migration MakeExecutionStatusNonNullable1714133768521
+n8n-1           | Finished migration MakeExecutionStatusNonNullable1714133768521
+n8n-1           | Starting migration AddActivatedAtUserSetting1717498465931
+n8n-1           | Finished migration AddActivatedAtUserSetting1717498465931
+n8n-1           | Starting migration AddConstraintToExecutionMetadata1720101653148
+n8n-1           | Finished migration AddConstraintToExecutionMetadata1720101653148
+n8n-1           | Starting migration FixExecutionMetadataSequence1721377157740
+n8n-1           | Finished migration FixExecutionMetadataSequence1721377157740
+n8n-1           | Starting migration CreateInvalidAuthTokenTable1723627610222
+n8n-1           | Finished migration CreateInvalidAuthTokenTable1723627610222
+n8n-1           | Starting migration RefactorExecutionIndices1723796243146
+n8n-1           | Finished migration RefactorExecutionIndices1723796243146
+n8n-1           | Starting migration CreateAnnotationTables1724753530828
+n8n-1           | Finished migration CreateAnnotationTables1724753530828
+n8n-1           | Starting migration AddApiKeysTable1724951148974
+n8n-1           | Finished migration AddApiKeysTable1724951148974
+n8n-1           | Starting migration CreateProcessedDataTable1726606152711
+n8n-1           | Finished migration CreateProcessedDataTable1726606152711
+n8n-1           | Starting migration SeparateExecutionCreationFromStart1727427440136
+n8n-1           | Finished migration SeparateExecutionCreationFromStart1727427440136
+n8n-1           | Starting migration AddMissingPrimaryKeyOnAnnotationTagMapping1728659839644
+n8n-1           | Finished migration AddMissingPrimaryKeyOnAnnotationTagMapping1728659839644
+n8n-1           | Starting migration UpdateProcessedDataValueColumnToText1729607673464
+n8n-1           | Finished migration UpdateProcessedDataValueColumnToText1729607673464
+n8n-1           | Starting migration AddProjectIcons1729607673469
+n8n-1           | Finished migration AddProjectIcons1729607673469
+n8n-1           | Starting migration CreateTestDefinitionTable1730386903556
+n8n-1           | Finished migration CreateTestDefinitionTable1730386903556
+n8n-1           | Starting migration AddDescriptionToTestDefinition1731404028106
+n8n-1           | Finished migration AddDescriptionToTestDefinition1731404028106
+vault-1         | 2026-04-16T03:19:33.800Z [INFO]  rollback: Starting the rollback manager with 256 workers
+vault-1         | 2026-04-16T03:19:33.800Z [INFO]  rollback: starting rollback manager
+vault-1         | 2026-04-16T03:19:33.800Z [INFO]  core: restoring leases
+vault-1         | 2026-04-16T03:19:33.801Z [INFO]  expiration: lease restore complete
+vault-1         | 2026-04-16T03:19:33.801Z [INFO]  identity: entities restored
+vault-1         | 2026-04-16T03:19:33.801Z [INFO]  identity: groups restored
+n8n-1           | Starting migration MigrateTestDefinitionKeyToString1731582748663
+n8n-1           | Finished migration MigrateTestDefinitionKeyToString1731582748663
+n8n-1           | Starting migration CreateTestMetricTable1732271325258
+n8n-1           | Finished migration CreateTestMetricTable1732271325258
+n8n-1           | Starting migration CreateTestRun1732549866705
+n8n-1           | Finished migration CreateTestRun1732549866705
+n8n-1           | Starting migration AddMockedNodesColumnToTestDefinition1733133775640
+n8n-1           | Finished migration AddMockedNodesColumnToTestDefinition1733133775640
+n8n-1           | Starting migration AddManagedColumnToCredentialsTable1734479635324
+n8n-1           | Finished migration AddManagedColumnToCredentialsTable1734479635324
+n8n-1           | Starting migration AddStatsColumnsToTestRun1736172058779
+n8n-1           | Finished migration AddStatsColumnsToTestRun1736172058779
+n8n-1           | Starting migration CreateTestCaseExecutionTable1736947513045
+n8n-1           | Finished migration CreateTestCaseExecutionTable1736947513045
+n8n-1           | Starting migration AddErrorColumnsToTestRuns1737715421462
+vault-1         | 2026-04-16T03:19:33.802Z [INFO]  core: Recorded vault version: vault version=1.17.6 upgrade time="2026-04-16 03:19:33.801783214 +0000 UTC" build date=2024-09-24T19:48:40Z
+vault-1         | 2026-04-16T03:19:33.802Z [INFO]  core: post-unseal setup complete
+vault-1         | 2026-04-16T03:19:33.802Z [INFO]  core: root token generated
+vault-1         | 2026-04-16T03:19:33.802Z [INFO]  core: pre-seal teardown starting
+vault-1         | 2026-04-16T03:19:33.802Z [INFO]  rollback: stopping rollback manager
+vault-1         | 2026-04-16T03:19:33.802Z [INFO]  core: pre-seal teardown complete
+vault-1         | 2026-04-16T03:19:33.803Z [INFO]  core.cluster-listener.tcp: starting listener: listener_address=0.0.0.0:8201
+vault-1         | 2026-04-16T03:19:33.803Z [INFO]  core.cluster-listener: serving cluster requests: cluster_listen_address=[::]:8201
+vault-1         | 2026-04-16T03:19:33.803Z [INFO]  core: post-unseal setup starting
+vault-1         | 2026-04-16T03:19:33.803Z [INFO]  core: loaded wrapping token key
+vault-1         | 2026-04-16T03:19:33.803Z [INFO]  core: successfully setup plugin runtime catalog
+vault-1         | 2026-04-16T03:19:33.803Z [INFO]  core: successfully setup plugin catalog: plugin-directory=""
+vault-1         | 2026-04-16T03:19:33.804Z [INFO]  core: successfully mounted: type=system version="v1.17.6+builtin.vault" path=sys/ namespace="ID: root. Path: "
+vault-1         | 2026-04-16T03:19:33.804Z [INFO]  core: successfully mounted: type=identity version="v1.17.6+builtin.vault" path=identity/ namespace="ID: root. Path: "
+vault-1         | 2026-04-16T03:19:33.804Z [INFO]  core: successfully mounted: type=cubbyhole version="v1.17.6+builtin.vault" path=cubbyhole/ namespace="ID: root. Path: "
+vault-1         | 2026-04-16T03:19:33.806Z [INFO]  core: successfully mounted: type=token version="v1.17.6+builtin.vault" path=token/ namespace="ID: root. Path: "
+vault-1         | 2026-04-16T03:19:33.806Z [INFO]  rollback: Starting the rollback manager with 256 workers
+vault-1         | 2026-04-16T03:19:33.806Z [INFO]  rollback: starting rollback manager
+vault-1         | 2026-04-16T03:19:33.806Z [INFO]  core: restoring leases
+vault-1         | 2026-04-16T03:19:33.806Z [INFO]  expiration: lease restore complete
+vault-1         | 2026-04-16T03:19:33.807Z [INFO]  identity: entities restored
+vault-1         | 2026-04-16T03:19:33.807Z [INFO]  identity: groups restored
+vault-1         | 2026-04-16T03:19:33.807Z [INFO]  core: post-unseal setup complete
+vault-1         | 2026-04-16T03:19:33.807Z [INFO]  core: vault is unsealed
+vault-1         | 2026-04-16T03:19:33.809Z [INFO]  expiration: revoked lease: lease_id=auth/token/root/hccd9a680e33a9499c44708328bc151345942db5982e469d31d261172582a42a9
+vault-1         | 2026-04-16T03:19:33.813Z [INFO]  core: successful mount: namespace="" path=secret/ type=kv version="v0.19.0+builtin"
+vault-1         | WARNING! dev mode is enabled! In this mode, Vault runs entirely in-memory
+vault-1         | and starts unsealed with a single unseal key. The root token is already
+vault-1         | authenticated to the CLI, so you can immediately begin using Vault.
+vault-1         | 
+vault-1         | You may need to set the following environment variables:
+n8n-1           | Finished migration AddErrorColumnsToTestRuns1737715421462
+n8n-1           | Starting migration CreateFolderTable1738709609940
+n8n-1           | Finished migration CreateFolderTable1738709609940
+n8n-1           | Starting migration CreateAnalyticsTables1739549398681
+n8n-1           | Finished migration CreateAnalyticsTables1739549398681
+n8n-1           | Starting migration UpdateParentFolderIdColumn1740445074052
+n8n-1           | Finished migration UpdateParentFolderIdColumn1740445074052
+n8n-1           | Starting migration RenameAnalyticsToInsights1741167584277
+n8n-1           | Finished migration RenameAnalyticsToInsights1741167584277
+n8n-1           | Starting migration AddScopesColumnToApiKeys1742918400000
+n8n-1           | Finished migration AddScopesColumnToApiKeys1742918400000
+n8n-1           | Starting migration ClearEvaluation1745322634000
+n8n-1           | Finished migration ClearEvaluation1745322634000
+n8n-1           | Starting migration AddWorkflowStatisticsRootCount1745587087521
+n8n-1           | Finished migration AddWorkflowStatisticsRootCount1745587087521
+n8n-1           | Starting migration AddWorkflowArchivedColumn1745934666076
+n8n-1           | Finished migration AddWorkflowArchivedColumn1745934666076
+n8n-1           | Starting migration DropRoleTable1745934666077
+n8n-1           | Finished migration DropRoleTable1745934666077
+n8n-1           | Starting migration AddProjectDescriptionColumn1747824239000
+n8n-1           | Finished migration AddProjectDescriptionColumn1747824239000
+vault-1         | 
+vault-1         |     $ export VAULT_ADDR='http://0.0.0.0:8200'
+vault-1         | 
+vault-1         | The unseal key and root token are displayed below in case you want to
+vault-1         | seal/unseal the Vault or re-authenticate.
+vault-1         | 
+vault-1         | Unseal Key: 7jcx02ltApyj8PfXOxdHNfbA/0TM0fztma/+kDmjqpc=
+vault-1         | Root Token: vault-test-root-token
+vault-1         | 
+vault-1         | Development mode should NOT be used in production installations!
+vault-1         | 
+n8n-1           | Starting migration AddLastActiveAtColumnToUser1750252139166
+n8n-1           | Finished migration AddLastActiveAtColumnToUser1750252139166
+n8n-1           | Starting migration AddScopeTables1750252139166
+n8n-1           | Finished migration AddScopeTables1750252139166
+n8n-1           | Starting migration AddRolesTables1750252139167
+n8n-1           | Finished migration AddRolesTables1750252139167
+n8n-1           | Starting migration LinkRoleToUserTable1750252139168
+n8n-1           | Finished migration LinkRoleToUserTable1750252139168
+n8n-1           | Starting migration RemoveOldRoleColumn1750252139170
+n8n-1           | Finished migration RemoveOldRoleColumn1750252139170
+n8n-1           | Starting migration AddInputsOutputsToTestCaseExecution1752669793000
+n8n-1           | Finished migration AddInputsOutputsToTestCaseExecution1752669793000
+n8n-1           | Starting migration LinkRoleToProjectRelationTable1753953244168
+n8n-1           | Finished migration LinkRoleToProjectRelationTable1753953244168
+n8n-1           | Starting migration CreateDataStoreTables1754475614601
+n8n-1           | Finished migration CreateDataStoreTables1754475614601
+n8n-1           | Starting migration ReplaceDataStoreTablesWithDataTables1754475614602
+n8n-1           | Finished migration ReplaceDataStoreTablesWithDataTables1754475614602
+n8n-1           | Starting migration AddTimestampsToRoleAndRoleIndexes1756906557570
+n8n-1           | Finished migration AddTimestampsToRoleAndRoleIndexes1756906557570
+n8n-1           | Starting migration AddAudienceColumnToApiKeys1758731786132
+n8n-1           | Finished migration AddAudienceColumnToApiKeys1758731786132
+n8n-1           | Starting migration AddProjectIdToVariableTable1758794506893
+n8n-1           | Finished migration AddProjectIdToVariableTable1758794506893
+n8n-1           | Starting migration ChangeValueTypesForInsights1759399811000
+n8n-1           | Finished migration ChangeValueTypesForInsights1759399811000
+n8n-1           | Starting migration CreateChatHubTables1760019379982
+n8n-1           | Finished migration CreateChatHubTables1760019379982
+n8n-1           | Starting migration CreateChatHubAgentTable1760020000000
+n8n-1           | Finished migration CreateChatHubAgentTable1760020000000
+n8n-1           | Starting migration UniqueRoleNames1760020838000
+n8n-1           | Finished migration UniqueRoleNames1760020838000
+n8n-1           | Starting migration CreateOAuthEntities1760116750277
+n8n-1           | Finished migration CreateOAuthEntities1760116750277
+n8n-1           | Starting migration CreateWorkflowDependencyTable1760314000000
+n8n-1           | Finished migration CreateWorkflowDependencyTable1760314000000
+n8n-1           | Starting migration DropUnusedChatHubColumns1760965142113
+n8n-1           | Finished migration DropUnusedChatHubColumns1760965142113
+n8n-1           | Starting migration AddWorkflowVersionColumn1761047826451
+n8n-1           | Finished migration AddWorkflowVersionColumn1761047826451
+n8n-1           | Starting migration ChangeDependencyInfoToJson1761655473000
+n8n-1           | Finished migration ChangeDependencyInfoToJson1761655473000
+n8n-1           | Starting migration AddAttachmentsToChatHubMessages1761773155024
+n8n-1           | Finished migration AddAttachmentsToChatHubMessages1761773155024
+n8n-1           | Starting migration AddToolsColumnToChatHubTables1761830340990
+n8n-1           | Finished migration AddToolsColumnToChatHubTables1761830340990
+n8n-1           | Starting migration AddWorkflowDescriptionColumn1762177736257
+n8n-1           | Finished migration AddWorkflowDescriptionColumn1762177736257
+n8n-1           | Starting migration BackfillMissingWorkflowHistoryRecords1762763704614
+n8n-1           | Finished migration BackfillMissingWorkflowHistoryRecords1762763704614
+n8n-1           | Starting migration ChangeDefaultForIdInUserTable1762771264000
+n8n-1           | Finished migration ChangeDefaultForIdInUserTable1762771264000
+n8n-1           | Starting migration AddIsGlobalColumnToCredentialsTable1762771954619
+n8n-1           | Finished migration AddIsGlobalColumnToCredentialsTable1762771954619
+n8n-1           | Starting migration AddWorkflowHistoryAutoSaveFields1762847206508
+n8n-1           | Finished migration AddWorkflowHistoryAutoSaveFields1762847206508
+n8n-1           | Starting migration AddActiveVersionIdColumn1763047800000
+n8n-1           | Finished migration AddActiveVersionIdColumn1763047800000
+n8n-1           | Starting migration ActivateExecuteWorkflowTriggerWorkflows1763048000000
+n8n-1           | Finished migration ActivateExecuteWorkflowTriggerWorkflows1763048000000
+n8n-1           | Starting migration ChangeOAuthStateColumnToUnboundedVarchar1763572724000
+n8n-1           | Finished migration ChangeOAuthStateColumnToUnboundedVarchar1763572724000
+n8n-1           | Starting migration CreateBinaryDataTable1763716655000
+n8n-1           | Finished migration CreateBinaryDataTable1763716655000
+n8n-1           | Starting migration CreateWorkflowPublishHistoryTable1764167920585
+n8n-1           | Finished migration CreateWorkflowPublishHistoryTable1764167920585
+n8n-1           | Starting migration AddCreatorIdToProjectTable1764276827837
+n8n-1           | Finished migration AddCreatorIdToProjectTable1764276827837
+n8n-1           | Starting migration CreateDynamicCredentialResolverTable1764682447000
+n8n-1           | Finished migration CreateDynamicCredentialResolverTable1764682447000
+n8n-1           | Starting migration AddDynamicCredentialEntryTable1764689388394
+n8n-1           | Finished migration AddDynamicCredentialEntryTable1764689388394
+n8n-1           | Starting migration BackfillMissingWorkflowHistoryRecords1765448186933
+n8n-1           | Finished migration BackfillMissingWorkflowHistoryRecords1765448186933
+n8n-1           | Starting migration AddResolvableFieldsToCredentials1765459448000
+n8n-1           | Finished migration AddResolvableFieldsToCredentials1765459448000
+n8n-1           | Starting migration AddIconToAgentTable1765788427674
+n8n-1           | Finished migration AddIconToAgentTable1765788427674
+n8n-1           | Starting migration ConvertAgentIdToUuid1765804780000
+n8n-1           | Finished migration ConvertAgentIdToUuid1765804780000
+n8n-1           | Starting migration AddAgentIdForeignKeys1765886667897
+n8n-1           | Finished migration AddAgentIdForeignKeys1765886667897
+n8n-1           | Starting migration AddWorkflowVersionIdToExecutionData1765892199653
+n8n-1           | Finished migration AddWorkflowVersionIdToExecutionData1765892199653
+n8n-1           | Starting migration AddWorkflowPublishScopeToProjectRoles1766064542000
+n8n-1           | Added workflow:publish scope to project roles with workflow:update
+n8n-1           | Finished migration AddWorkflowPublishScopeToProjectRoles1766064542000
+n8n-1           | Starting migration AddChatMessageIndices1766068346315
+n8n-1           | Finished migration AddChatMessageIndices1766068346315
+n8n-1           | Starting migration ExpandInsightsWorkflowIdLength1766500000000
+n8n-1           | Finished migration ExpandInsightsWorkflowIdLength1766500000000
+n8n-1           | Starting migration ChangeWorkflowStatisticsFKToNoAction1767018516000
+n8n-1           | Finished migration ChangeWorkflowStatisticsFKToNoAction1767018516000
+n8n-1           | Starting migration ExpandModelColumnLength1768402473068
+n8n-1           | Finished migration ExpandModelColumnLength1768402473068
+n8n-1           | Starting migration AddStoredAtToExecutionEntity1768557000000
+n8n-1           | Finished migration AddStoredAtToExecutionEntity1768557000000
+n8n-1           | Starting migration AddDynamicCredentialUserEntryTable1768901721000
+n8n-1           | Finished migration AddDynamicCredentialUserEntryTable1768901721000
+n8n-1           | Starting migration AddPublishedVersionIdToWorkflowDependency1769000000000
+n8n-1           | Finished migration AddPublishedVersionIdToWorkflowDependency1769000000000
+n8n-1           | Starting migration CreateSecretsProviderConnectionTables1769433700000
+n8n-1           | Finished migration CreateSecretsProviderConnectionTables1769433700000
+n8n-1           | Starting migration CreateWorkflowPublishedVersionTable1769698710000
+n8n-1           | Finished migration CreateWorkflowPublishedVersionTable1769698710000
+n8n-1           | Starting migration ExpandSubjectIDColumnLength1769784356000
+n8n-1           | Finished migration ExpandSubjectIDColumnLength1769784356000
+n8n-1           | Starting migration AddWorkflowUnpublishScopeToCustomRoles1769900001000
+n8n-1           | Finished migration AddWorkflowUnpublishScopeToCustomRoles1769900001000
+n8n-1           | Starting migration CreateChatHubToolsTable1770000000000
+n8n-1           | Finished migration CreateChatHubToolsTable1770000000000
+n8n-1           | Starting migration ExpandProviderIdColumnLength1770000000000
+n8n-1           | Finished migration ExpandProviderIdColumnLength1770000000000
+n8n-1           | Starting migration CreateWorkflowBuilderSessionTable1770220686000
+n8n-1           | Finished migration CreateWorkflowBuilderSessionTable1770220686000
+n8n-1           | Starting migration AddScalingFieldsToTestRun1771417407753
+n8n-1           | Finished migration AddScalingFieldsToTestRun1771417407753
+n8n-1           | Starting migration MigrateExternalSecretsToEntityStorage1771500000000
+n8n-1           | [MigrateExternalSecretsToEntityStorage1771500000000] No external secrets settings found, skipping
+n8n-1           | Finished migration MigrateExternalSecretsToEntityStorage1771500000000
+n8n-1           | Starting migration AddUnshareScopeToCustomRoles1771500000001
+n8n-1           | Finished migration AddUnshareScopeToCustomRoles1771500000001
+n8n-1           | Starting migration AddFilesColumnToChatHubAgents1771500000002
+n8n-1           | Finished migration AddFilesColumnToChatHubAgents1771500000002
+n8n-1           | Starting migration AddSuggestedPromptsToAgentTable1772000000000
+n8n-1           | Finished migration AddSuggestedPromptsToAgentTable1772000000000
+n8n-1           | Starting migration AddRoleColumnToProjectSecretsProviderAccess1772619247761
+n8n-1           | Finished migration AddRoleColumnToProjectSecretsProviderAccess1772619247761
+n8n-1           | Starting migration ChangeWorkflowPublishedVersionFKsToRestrict1772619247762
+n8n-1           | Finished migration ChangeWorkflowPublishedVersionFKsToRestrict1772619247762
+n8n-1           | Starting migration AddTypeToChatHubSessions1772700000000
+n8n-1           | Finished migration AddTypeToChatHubSessions1772700000000
+n8n-1           | n8n Task Broker ready on 127.0.0.1, port 5679
+n8n-1           | Failed to start Python task runner in internal mode. because Python 3 is missing from this system. Launching a Python runner in internal mode is intended only for debugging and is not recommended for production. Users are encouraged to deploy in external mode. See: https://docs.n8n.io/hosting/configuration/task-runners/#setting-up-external-mode
+n8n-1           | [license SDK] Skipping renewal on init: license cert is not initialized
+n8n-1           | Registered runner "JS Task Runner" (Kft93o1NazjfcF_Aav3DX) 
+n8n-1           | Version: 2.13.3
+n8n-1           | Building workflow dependency index...
+n8n-1           | Finished building workflow dependency index. Processed 0 draft workflows, 0 published workflows.
+n8n-1           | 
+n8n-1           | Editor is now accessible via:
+n8n-1           | http://localhost:5678

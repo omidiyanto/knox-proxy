@@ -46,26 +46,16 @@ jobs:
 
       - name: Run unit tests
         working-directory: knox-proxy
-        run: |
-          go test -v -race -count=1 -coverprofile=coverage.out ./...
-          go tool cover -func=coverage.out | tail -1
-
-      - name: Upload coverage
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unit-test-coverage
-          path: knox-proxy/coverage.out
-          retention-days: 7
+        run: go test -v -race -count=1 -cover -timeout 120s ./...
 
   # ═══════════════════════════════════════════════════════════════════════════
   # Job 2: Integration Tests
   # ═══════════════════════════════════════════════════════════════════════════
   integration-tests:
     name: '🔗 Integration Tests (n8n ${{ inputs.n8n_version }})'
-    if: inputs.test_scope == 'all' || inputs.test_scope == 'integration'
     runs-on: ubuntu-latest
     needs: [unit-tests]
+    if: always() && (inputs.test_scope == 'all' || inputs.test_scope == 'integration') && (needs.unit-tests.result == 'success' || needs.unit-tests.result == 'skipped')
 
     steps:
       - name: Checkout
@@ -134,9 +124,9 @@ jobs:
   # ═══════════════════════════════════════════════════════════════════════════
   e2e-tests:
     name: '🌐 E2E Browser Tests (n8n ${{ inputs.n8n_version }})'
-    if: inputs.test_scope == 'all' || inputs.test_scope == 'e2e'
     runs-on: ubuntu-latest
     needs: [unit-tests]
+    if: always() && (inputs.test_scope == 'all' || inputs.test_scope == 'e2e') && (needs.unit-tests.result == 'success' || needs.unit-tests.result == 'skipped')
 
     steps:
       - name: Checkout

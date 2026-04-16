@@ -35,9 +35,8 @@ wait_for() {
 }
 
 # ── Check Keycloak ──────────────────────────────────────────────────────────
-wait_for "Keycloak" "http://localhost:8080/health/ready"
-
-# ── Check Keycloak OIDC Discovery ───────────────────────────────────────────
+# Health endpoint is on port 9000 (management) which may not be exposed.
+# Use OIDC discovery as the readiness indicator instead.
 wait_for "Keycloak OIDC" "http://localhost:8080/realms/knox-test/.well-known/openid-configuration"
 
 # ── Check Vault ─────────────────────────────────────────────────────────────
