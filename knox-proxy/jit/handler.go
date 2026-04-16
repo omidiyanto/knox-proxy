@@ -450,6 +450,9 @@ func (h *Handler) handleAdminUpdateStatus(w http.ResponseWriter, r *http.Request
 		}
 	}
 
+	// Fire webhook to notify external systems of the manual admin status update
+	go h.FireWebhook(ticket)
+
 	writeJSON(w, http.StatusOK, TicketResponse{
 		Ticket:   *ticket,
 		Duration: ticket.Duration(),
