@@ -1,0 +1,15 @@
+{
+  "name": "knox-e2e-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Knox IAM Gateway — End-to-End Browser Tests",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:ui": "npx playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}

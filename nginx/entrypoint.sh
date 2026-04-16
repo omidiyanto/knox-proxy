@@ -8,6 +8,7 @@
 # Environment Variables:
 #   KNOX_JIT_ENABLED        - "true" to show JIT Access menu in UI (default: true)
 #   KNOX_WATERMARK_ENABLED  - "true" to enable watermark overlay (default: false)
+#   KNOX_JIT_EDIT_ENABLED   - "true" to enable JIT Edit checkbox (default: false)
 # ══════════════════════════════════════════════════════════════════════════════
 
 set -e
@@ -25,6 +26,15 @@ if [ "${KNOX_JIT_ENABLED}" = "true" ]; then
 else
   echo "[knox-entrypoint] JIT UI DISABLED"
   sed -i 's|__KNOX_JIT_PLACEHOLDER__||g' "$OUTPUT"
+fi
+
+# ── JIT Edit Toggle ─────────────────────────────────────────────────────────
+if [ "${KNOX_JIT_EDIT_ENABLED}" = "true" ]; then
+  echo "[knox-entrypoint] JIT Edit checkbox ENABLED"
+  sed -i 's|__KNOX_JIT_EDIT_PLACEHOLDER__|<script>window.__KNOX_JIT_EDIT__=true;</script>|g' "$OUTPUT"
+else
+  echo "[knox-entrypoint] JIT Edit checkbox DISABLED (default: run only)"
+  sed -i 's|__KNOX_JIT_EDIT_PLACEHOLDER__||g' "$OUTPUT"
 fi
 
 # ── Watermark Toggle ────────────────────────────────────────────────────────

@@ -119,10 +119,11 @@
       '<input type="checkbox" name="knox-access" value="run" checked> ' +
       '<span>Run</span>' +
       '</label>' +
-      '<label class="knox-checkbox-label">' +
-      '<input type="checkbox" name="knox-access" value="edit"> ' +
-      '<span>Edit</span>' +
-      '</label>' +
+      (window.__KNOX_JIT_EDIT__ ?
+        '<label class="knox-checkbox-label">' +
+        '<input type="checkbox" name="knox-access" value="edit"> ' +
+        '<span>Edit</span>' +
+        '</label>' : '') +
       '</div>' +
       '</div>' +
       '<div class="knox-form-group">' +
@@ -279,10 +280,15 @@
     var description = document.getElementById('knox-description').value.trim();
 
     // Gather checked access types
-    var accessBoxes = document.querySelectorAll('input[name="knox-access"]:checked');
     var accessType = [];
-    for (var i = 0; i < accessBoxes.length; i++) {
-      accessType.push(accessBoxes[i].value);
+    if (!window.__KNOX_JIT_EDIT__) {
+      // Edit checkbox is hidden — force run-only
+      accessType = ['run'];
+    } else {
+      var accessBoxes = document.querySelectorAll('input[name="knox-access"]:checked');
+      for (var i = 0; i < accessBoxes.length; i++) {
+        accessType.push(accessBoxes[i].value);
+      }
     }
 
     // Client-side validation

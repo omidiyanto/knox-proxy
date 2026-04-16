@@ -1,0 +1,172 @@
+{
+  "realm": "knox-test",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": false,
+  "roles": {
+    "client": {
+      "knox-test": [
+        {
+          "name": "run:*",
+          "description": "Run all workflows (wildcard)"
+        },
+        {
+          "name": "edit:*",
+          "description": "Edit all workflows (wildcard)"
+        },
+        {
+          "name": "run:test-workflow-1",
+          "description": "Run workflow test-workflow-1"
+        },
+        {
+          "name": "edit:test-workflow-1",
+          "description": "Edit workflow test-workflow-1"
+        }
+      ]
+    }
+  },
+  "groups": [
+    {
+      "name": "n8n-test-testteam",
+      "path": "/n8n-test-testteam"
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "knox-test",
+      "name": "Knox Test Client",
+      "description": "Knox IAM Gateway — CI Test Client",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "knox-test-secret",
+      "redirectUris": [
+        "http://localhost:8443/auth/callback"
+      ],
+      "webOrigins": [
+        "http://localhost:8443"
+      ],
+      "publicClient": false,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "attributes": {
+        "backchannel.logout.url": "http://knox-proxy:8443/auth/backchannel-logout",
+        "backchannel.logout.session.required": "true",
+        "backchannel.logout.revoke.offline.tokens": "true"
+      },
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "full.path": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "groups",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "client-roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-client-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "usermodel.clientRoleMapping.clientId": "knox-test",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "resource_access.knox-test.roles",
+            "jsonType.label": "String",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "testuser",
+      "enabled": true,
+      "email": "testuser@knox-ci.local",
+      "emailVerified": true,
+      "firstName": "Test",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "testpass",
+          "temporary": false
+        }
+      ],
+      "groups": [
+        "/n8n-test-testteam"
+      ],
+      "clientRoles": {
+        "knox-test": [
+          "run:test-workflow-1"
+        ]
+      }
+    },
+    {
+      "username": "restricteduser",
+      "enabled": true,
+      "email": "restricted@knox-ci.local",
+      "emailVerified": true,
+      "firstName": "Restricted",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "testpass",
+          "temporary": false
+        }
+      ],
+      "groups": [
+        "/n8n-test-testteam"
+      ],
+      "clientRoles": {
+        "knox-test": []
+      }
+    },
+    {
+      "username": "adminuser",
+      "enabled": true,
+      "email": "admin@knox-ci.local",
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "testpass",
+          "temporary": false
+        }
+      ],
+      "groups": [
+        "/n8n-test-testteam"
+      ],
+      "clientRoles": {
+        "knox-test": [
+          "run:*",
+          "edit:*"
+        ]
+      }
+    }
+  ]
+}
