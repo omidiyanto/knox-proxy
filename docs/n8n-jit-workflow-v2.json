@@ -1,0 +1,2220 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS n8n_cache (\n    key VARCHAR(50) PRIMARY KEY,\n    value TEXT NOT NULL\n);",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        14544,
+        12496
+      ],
+      "id": "82f9ef5c-2c64-413d-8874-955a278a128a",
+      "name": "Ensure Schema Exists",
+      "credentials": {
+        "postgres": {
+          "id": "pa1sGOAL2y9njP4M",
+          "name": "KNOX KC Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Knox JIT Webhook').item.json.body.status }}",
+                    "rightValue": "requested",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "07ca48d9-d2f6-42d4-accc-3b30d3c241cd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "requested"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Knox JIT Webhook').item.json.body.status }}",
+                    "rightValue": "approved",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "be4a9ec5-46db-4bbd-9e70-6da9a9e77b80"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "approved"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Knox JIT Webhook').item.json.body.status }}",
+                    "rightValue": "rejected",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "42ae042c-1b87-491e-8e48-fd524e07d172"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "rejected"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Knox JIT Webhook').item.json.body.status }}",
+                    "rightValue": "canceled",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "17ca70cd-da4d-4e52-9e0a-717ba058f11f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "canceled"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Knox JIT Webhook').item.json.body.status }}",
+                    "rightValue": "active",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "0fc161af-adab-4c23-bdaa-5a1518c6083d"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "active"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Knox JIT Webhook').item.json.body.status }}",
+                    "rightValue": "expired",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2bb7d0d7-d2f0-42e8-9371-226db3e16ede"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "expired"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1e651a92-d94b-4167-b077-ae0150f64746",
+      "name": "Switch by JIT Status",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        14592,
+        12000
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').item.json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').item.json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/create\",\n  \"class\": $('Global Config').item.json.ITOP_CLASS,\n  \"comment\": \"Tiket JIT\",\n  \"fields\": {\n    \"org_id\": \"SELECT Organization JOIN Person ON Person.org_id = Organization.id WHERE Person.email = \\\"\" + $('Knox JIT Webhook').item.json.body.user_requestor + \"\\\"\",\n    \"caller_id\": \"SELECT Person WHERE email = \\\"\" + $('Knox JIT Webhook').item.json.body.user_requestor + \"\\\"\",\n    \"title\": \"[JIT-REQ-N8N] \" + $('Knox JIT Webhook').item.json.body.user_requestor + \" request to \" + $('Knox JIT Webhook').item.json.body.access_type + \" for \" + $('Knox JIT Webhook').item.json.body.workflow_id,\n    \"description\": \"<b>Ticket Number</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_number + \"<br><b>Ticket ID</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_id + \"<br><b>N8N User/Team Impersonation</b>: \" + $('Knox JIT Webhook').item.json.body.n8n_team + \"<br><b>Workflow ID</b>: \" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><b>Access Type</b>: \" + $('Knox JIT Webhook').item.json.body.access_type + \"<br><b>Description</b>: \" + $('Knox JIT Webhook').item.json.body.description + \"<br><b>JIT Period Start</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_start + \"<br><b>JIT Period End</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_end + \"<br><b>JIT Duration</b>: \" + $('Knox JIT Webhook').item.json.body.jit_duration + \"<br><b>Requested At</b>: \" + $('Knox JIT Webhook').item.json.body.requested_at + \"<br><b>Knox Status</b>: requested<br><b>URL</b>: \" + $('Global Config').item.json.KNOX_API_URL + \"/workflow/\" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><br><hr><b>Approval Tracker:</b><br>[⏳] Approver-1 -> [ ] Approver-2\",\n    \"status\": \"waiting_for_approval\",\n    \"approver_id\": \"SELECT Person WHERE email = \\\"\" + $('Global Config').item.json.APPROVER1_EMAIL + \"\\\"\",\n    \"service_id\": \"SELECT Service WHERE name = \\\"\" + $('Global Config').item.json.ITOP_SERVICE_NAME + \"\\\"\",\n    \"servicesubcategory_id\": \"SELECT ServiceSubcategory WHERE name = \\\"\" + $('Global Config').item.json.ITOP_SERVICE_SUBCATEGORY + \"\\\"\",\n    \"impact\": $('Global Config').item.json.ITOP_IMPACT,\n    \"urgency\": $('Global Config').item.json.ITOP_URGENCY\n  },\n  \"output_fields\": \"status\"\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3a5e2c30-fcd7-469e-a2d3-116778e3670b",
+      "name": "Create iTop Ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        14832,
+        11760
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"app1_timeout\": \"{{ $now.plus({minutes: 2}).toISO() }}\"\n}",
+        "options": {}
+      },
+      "id": "eefac9fa-2c1a-4d37-8eb1-2b3e17dbfc9f",
+      "name": "Set App 1 Timeout",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        14992,
+        11760
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').item.json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').item.json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/get\",\n  \"class\": $('Global Config').item.json.ITOP_CLASS,\n  \"key\": \"SELECT \" + $('Global Config').item.json.ITOP_CLASS + \" WHERE description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_id + \"%\\' AND description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_number + \"%\\'\",\n  \"output_fields\": \"status\"\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1ee9a499-0c95-4fd1-9a50-a5b666d6e889",
+      "name": "Cek App 1 Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        15184,
+        11760
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ Object.values($json.objects)[0].fields.status }}",
+                    "rightValue": "approved",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c896cf3b-92b3-4713-b588-4f5691b1fb2c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "approved"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ Object.values($json.objects)[0].fields.status }}",
+                    "rightValue": "rejected",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "25ea14e7-8271-4394-b759-d7fa6e32d0e2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "rejected"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $now >= DateTime.fromISO($('Set App 1 Timeout').item.json.app1_timeout) ? 'timeout' : 'wait' }}",
+                    "rightValue": "timeout",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5109685e-d41b-40aa-aa79-bfa572235603"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "timeout"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ Object.values($json.objects)[0].fields.status }}",
+                    "rightValue": "waiting_for_approval",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b7449f6f-bc55-42de-9352-d8a244fa7ba8"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "waiting"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "38554a69-3170-4f7d-8631-0a81c4fe1074",
+      "name": "Is App 1 Approved?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        15328,
+        11728
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "id": "efad695a-443e-4ec8-944d-7f98c16fe1a6",
+      "name": "Wait 1m (App 1)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        15328,
+        11936
+      ],
+      "webhookId": "3622295b-ef5b-47eb-8a73-9f4a7d1d86b9"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').item.json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').item.json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/apply_stimulus\",\n  \"class\": $('Global Config').item.json.ITOP_CLASS,\n  \"comment\": \"Tiket di-assign ke \" + $('Global Config').item.json.APPROVER2_EMAIL,\n  \"key\": \"SELECT \" + $('Global Config').item.json.ITOP_CLASS + \" WHERE description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_id + \"%\\' AND description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_number + \"%\\'\",\n  \"stimulus\": \"ev_assign\",\n  \"fields\": {\n    \"agent_id\": \"SELECT Person WHERE email=\\\"\" + $('Global Config').item.json.APPROVER2_EMAIL + \"\\\"\",\n    \"team_id\": \"SELECT Team JOIN lnkPersonToTeam ON lnkPersonToTeam.team_id=Team.id JOIN Person ON lnkPersonToTeam.person_id=Person.id WHERE Person.email=\\\"\" + $('Global Config').item.json.APPROVER2_EMAIL + \"\\\"\"\n  }\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e6bf2d0b-d087-40b4-841b-9fb6de77bd69",
+      "name": "Assign to App 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        15728,
+        11712
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"app2_timeout\": \"{{ $now.plus({minutes: 2}).toISO() }}\"\n}",
+        "options": {}
+      },
+      "id": "9c912ba7-0fc5-4461-b735-47ff37b4e4c0",
+      "name": "Set App 2 Timeout",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        15920,
+        11712
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').item.json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').item.json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/get\",\n  \"class\": $('Global Config').item.json.ITOP_CLASS,\n  \"key\": \"SELECT \" + $('Global Config').item.json.ITOP_CLASS + \" WHERE description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_id + \"%\\' AND description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_number + \"%\\'\",\n  \"output_fields\": \"status\"\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c13923a3-4da2-45cd-a7d3-989677d9a942",
+      "name": "Cek App 2 Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16112,
+        11712
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ Object.values($json.objects)[0].fields.status }}",
+                    "rightValue": "resolved",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "46edf4e4-35a2-4382-b283-9853363a3329"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "approved"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ Object.values($json.objects)[0].fields.status }}",
+                    "rightValue": "rejected",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "3d517ddc-c562-441d-ad3e-c4dd199b4caa"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "rejected"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $now >= DateTime.fromISO($('Set App 2 Timeout').item.json.app2_timeout) ? 'timeout' : 'wait' }}",
+                    "rightValue": "timeout",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "ab0616f1-5071-4832-9bee-79cff7c6b401"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "timeout"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ Object.values($json.objects)[0].fields.status }}",
+                    "rightValue": "assigned",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "aaa267b0-5f1b-4b8c-97b9-04f6cc3e025c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "waiting"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "971fe17f-a489-42de-8a6b-b8d92babf53b",
+      "name": "Is App 2 Resolved?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        16272,
+        11680
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "id": "ee677083-86d3-40d2-bd91-51b440b672dd",
+      "name": "Wait 1m (App 2)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        16272,
+        11888
+      ],
+      "webhookId": "585d428c-e096-4715-a11f-dbe14ca06d70"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $('Global Config').item.json.KNOX_API_URL }}/knox-api/admin/tickets/{{ $('Knox JIT Webhook').item.json.body.ticket_id }}/status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Knox-API-Key",
+              "value": "={{ $('Global Config').item.json.KNOX_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"status\": \"approved\",\n  \"reason\": \"iTop 2-Step Approval Finish\",\n  \"updated_by\": \"{{ $('Global Config').item.json.APPROVER2_EMAIL }}\"\n}",
+        "options": {}
+      },
+      "id": "b3a7ca2a-b4cf-403c-8b6e-b30debe92205",
+      "name": "Approve Knox API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16496,
+        11664
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $('Global Config').item.json.KNOX_API_URL }}/knox-api/admin/tickets/{{ $('Knox JIT Webhook').item.json.body.ticket_id }}/status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Knox-API-Key",
+              "value": "={{ $('Global Config').item.json.KNOX_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"status\": \"rejected\",\n  \"reason\": \"{{ Object.values($('Cek App 2 Status').item.json.objects)[0].fields.status === 'rejected' ? 'Ditolak oleh Approver-2' : 'Sistem Timeout pada Approver-2' }}\",\n  \"updated_by\": \"{{ $('Global Config').item.json.APPROVER2_EMAIL }}\"\n}",
+        "options": {}
+      },
+      "id": "25ba1090-551f-42a4-bc0f-a753305f40c4",
+      "name": "Reject Knox API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16496,
+        11808
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').item.json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').item.json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/update\",\n  \"class\": $('Global Config').item.json.ITOP_CLASS,\n  \"comment\": \"Tiket diselesaikan otomatis (Knox JIT Approved)\",\n  \"key\": \"SELECT \" + $('Global Config').item.json.ITOP_CLASS + \" WHERE description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_id + \"%\\' AND description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_number + \"%\\'\",\n  \"fields\": {\n    \"status\": \"resolved\",\n    \"resolution_code\": \"assistance\",\n    \"description\": \"<b>Ticket Number</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_number + \"<br><b>Ticket ID</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_id + \"<br><b>N8N User/Team Impersonation</b>: \" + $('Knox JIT Webhook').item.json.body.n8n_team + \"<br><b>Workflow ID</b>: \" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><b>Access Type</b>: \" + $('Knox JIT Webhook').item.json.body.access_type + \"<br><b>Description</b>: \" + $('Knox JIT Webhook').item.json.body.description + \"<br><b>JIT Period Start</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_start + \"<br><b>JIT Period End</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_end + \"<br><b>JIT Duration</b>: \" + $('Knox JIT Webhook').item.json.body.jit_duration + \"<br><b>Requested At</b>: \" + $('Knox JIT Webhook').item.json.body.requested_at + \"<br><b>Knox Status</b>: approved<br><b>URL</b>: \" + $('Global Config').item.json.KNOX_API_URL + \"/workflow/\" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><br><hr><b>Approval Tracker:</b><br>[✓] Approver-1 -> [✓] Approver-2\"\n  },\n  \"output_fields\": \"status\"\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f6c33484-adcd-45ac-8b5a-36e92db819e3",
+      "name": "iTop Update (Resolved)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        14832,
+        11920
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').item.json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').item.json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/update\",\n  \"class\": $('Global Config').item.json.ITOP_CLASS,\n  \"comment\": \"Tiket dibatalkan oleh sistem/user\",\n  \"key\": \"SELECT \" + $('Global Config').item.json.ITOP_CLASS + \" WHERE description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_id + \"%\\' AND description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_number + \"%\\'\",\n  \"fields\": {\n    \"status\": \"closed\",\n    \"description\": \"<b>Ticket Number</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_number + \"<br><b>Ticket ID</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_id + \"<br><b>N8N User/Team Impersonation</b>: \" + $('Knox JIT Webhook').item.json.body.n8n_team + \"<br><b>Workflow ID</b>: \" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><b>Access Type</b>: \" + $('Knox JIT Webhook').item.json.body.access_type + \"<br><b>Description</b>: \" + $('Knox JIT Webhook').item.json.body.description + \"<br><b>JIT Period Start</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_start + \"<br><b>JIT Period End</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_end + \"<br><b>JIT Duration</b>: \" + $('Knox JIT Webhook').item.json.body.jit_duration + \"<br><b>Requested At</b>: \" + $('Knox JIT Webhook').item.json.body.requested_at + \"<br><b>Knox Status</b>: \" + $('Knox JIT Webhook').item.json.body.status + \"<br><b>URL</b>: \" + $('Global Config').item.json.KNOX_API_URL + \"/workflow/\" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><br><hr><b>Approval Tracker:</b><br>[❌] Canceled / Aborted\"\n  },\n  \"output_fields\": \"status\"\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f38ad1d3-9ae4-4cbd-b930-2a460cb0d24d",
+      "name": "iTop Update (Canceled)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        14832,
+        12064
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').item.json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').item.json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/update\",\n  \"class\": $('Global Config').item.json.ITOP_CLASS,\n  \"comment\": (Object.values($('Cek App 1 Status').item.json.objects)[0].fields.status === 'rejected' ? \"Tiket ditolak pada tahap Approver-1\" : \"Tiket timeout pada tahap Approver-1\"),\n  \"key\": \"SELECT \" + $('Global Config').item.json.ITOP_CLASS + \" WHERE description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_id + \"%\\' AND description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_number + \"%\\'\",\n  \"fields\": {\n    \"status\": \"closed\",\n    \"description\": \"<b>Ticket Number</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_number + \"<br><b>Ticket ID</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_id + \"<br><b>N8N User/Team Impersonation</b>: \" + $('Knox JIT Webhook').item.json.body.n8n_team + \"<br><b>Workflow ID</b>: \" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><b>Access Type</b>: \" + $('Knox JIT Webhook').item.json.body.access_type + \"<br><b>Description</b>: \" + $('Knox JIT Webhook').item.json.body.description + \"<br><b>JIT Period Start</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_start + \"<br><b>JIT Period End</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_end + \"<br><b>JIT Duration</b>: \" + $('Knox JIT Webhook').item.json.body.jit_duration + \"<br><b>Requested At</b>: \" + $('Knox JIT Webhook').item.json.body.requested_at + \"<br><b>Knox Status</b>: rejected<br><b>URL</b>: \" + $('Global Config').item.json.KNOX_API_URL + \"/workflow/\" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><br><hr><b>Approval Tracker:</b><br>[❌] \" + (Object.values($('Cek App 1 Status').item.json.objects)[0].fields.status === 'rejected' ? \"Rejected\" : \"Timeout\") + \" at Approver-1\"\n  },\n  \"output_fields\": \"status\"\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d9b08d37-d1f8-4d38-864d-b5988556ea75",
+      "name": "iTop Update (Reject App 1)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        15728,
+        11872
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').item.json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').item.json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/update\",\n  \"class\": $('Global Config').item.json.ITOP_CLASS,\n  \"comment\": (Object.values($('Cek App 2 Status').item.json.objects)[0].fields.status === 'rejected' ? \"Tiket ditolak pada tahap Approver-2\" : \"Tiket timeout pada tahap Approver-2\"),\n  \"key\": \"SELECT \" + $('Global Config').item.json.ITOP_CLASS + \" WHERE description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_id + \"%\\' AND description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_number + \"%\\'\",\n  \"fields\": {\n    \"status\": \"closed\",\n    \"description\": \"<b>Ticket Number</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_number + \"<br><b>Ticket ID</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_id + \"<br><b>N8N User/Team Impersonation</b>: \" + $('Knox JIT Webhook').item.json.body.n8n_team + \"<br><b>Workflow ID</b>: \" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><b>Access Type</b>: \" + $('Knox JIT Webhook').item.json.body.access_type + \"<br><b>Description</b>: \" + $('Knox JIT Webhook').item.json.body.description + \"<br><b>JIT Period Start</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_start + \"<br><b>JIT Period End</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_end + \"<br><b>JIT Duration</b>: \" + $('Knox JIT Webhook').item.json.body.jit_duration + \"<br><b>Requested At</b>: \" + $('Knox JIT Webhook').item.json.body.requested_at + \"<br><b>Knox Status</b>: rejected<br><b>URL</b>: \" + $('Global Config').item.json.KNOX_API_URL + \"/workflow/\" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><br><hr><b>Approval Tracker:</b><br>[✓] Approver-1 -> [❌] \" + (Object.values($('Cek App 2 Status').item.json.objects)[0].fields.status === 'rejected' ? \"Rejected\" : \"Timeout\") + \" at Approver-2\"\n  },\n  \"output_fields\": \"status\"\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1702a364-690b-46af-b2a5-021997852525",
+      "name": "iTop Update (Reject App 2)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16720,
+        11808
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"APPROVER1_EMAIL\": \"user1@example.com\",\n  \"APPROVER2_EMAIL\": \"user2@example.com\",\n  \"ITOP_URL\": \"http://192.168.0.20:8111/webservices/rest.php\",\n  \"ITOP_USER\": \"admin\",\n  \"ITOP_PASS\": \"Passw0rd\",\n  \"ITOP_ORG_ID\": \"3\",\n  \"ITOP_CLASS\": \"UserRequest\",\n  \"ITOP_SERVICE_NAME\": \"SERVICE\",\n  \"ITOP_SERVICE_SUBCATEGORY\": \"Request Approval\",\n  \"ITOP_URGENCY\": \"2\",\n  \"ITOP_IMPACT\": \"2\",\n  \"KEYCLOAK_URL\": \"https://sso.example.com\",\n  \"KEYCLOAK_ADMIN_REALM\": \"example.com\",\n  \"KEYCLOAK_CLIENT_REALM\": \"example.com\",\n  \"KEYCLOAK_CLIENT_NAME\": \"n8n-proxy\",\n  \"KEYCLOAK_CLIENT_SECRET\": \"SECRET\",\n  \"KNOX_API_URL\": \"http://192.168.0.20:5677\",\n  \"KNOX_API_KEY\": \"SECRET\"\n}",
+        "options": {}
+      },
+      "id": "8bd7cb23-ce8b-4785-bc75-60862ce575e1",
+      "name": "Global Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        14448,
+        12048
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a1023ab9-c829-4616-8c9e-de97dd6bce0f",
+        "options": {}
+      },
+      "id": "10344342-bc0a-468f-8bcb-79897b9afb3b",
+      "name": "Knox JIT Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        14272,
+        12048
+      ],
+      "webhookId": "16be7c20-1b73-4d57-8351-32ebdfa0611d"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $('Global Config').item.json.KNOX_API_URL }}/knox-api/admin/tickets/{{ $('Knox JIT Webhook').item.json.body.ticket_id }}/status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Knox-API-Key",
+              "value": "={{ $('Global Config').item.json.KNOX_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"status\": \"rejected\",\n  \"reason\": \"{{ Object.values($('Cek App 1 Status').item.json.objects)[0].fields.status === 'rejected' ? 'Ditolak oleh Approver-1' : 'Sistem Timeout pada Approver-1' }}\",\n  \"updated_by\": \"{{ $('Global Config').item.json.APPROVER1_EMAIL }}\"\n}",
+        "options": {}
+      },
+      "id": "ae3b83c7-3042-455c-9fee-eff8ae99c817",
+      "name": "Reject Knox API1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        15568,
+        11872
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').item.json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').item.json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/update\",\n  \"class\": $('Global Config').item.json.ITOP_CLASS,\n  \"comment\": \"Approval Stage 1 berhasil\",\n  \"key\": \"SELECT \" + $('Global Config').item.json.ITOP_CLASS + \" WHERE description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_id + \"%\\' AND description LIKE \\'%\" + $('Knox JIT Webhook').item.json.body.ticket_number + \"%\\'\",\n  \"fields\": {\n    \"description\": \"<b>Ticket Number</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_number + \"<br><b>Ticket ID</b>: \" + $('Knox JIT Webhook').item.json.body.ticket_id + \"<br><b>N8N User/Team Impersonation</b>: \" + $('Knox JIT Webhook').item.json.body.n8n_team + \"<br><b>Workflow ID</b>: \" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><b>Access Type</b>: \" + $('Knox JIT Webhook').item.json.body.access_type + \"<br><b>Description</b>: \" + $('Knox JIT Webhook').item.json.body.description + \"<br><b>JIT Period Start</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_start + \"<br><b>JIT Period End</b>: \" + $('Knox JIT Webhook').item.json.body.jit_period_end + \"<br><b>JIT Duration</b>: \" + $('Knox JIT Webhook').item.json.body.jit_duration + \"<br><b>Requested At</b>: \" + $('Knox JIT Webhook').item.json.body.requested_at + \"<br><b>Knox Status</b>: requested<br><b>URL</b>: \" + $('Global Config').item.json.KNOX_API_URL + \"/workflow/\" + $('Knox JIT Webhook').item.json.body.workflow_id + \"<br><br><hr><b>Approval Tracker:</b><br>[✓] Approver-1 -> [⏳] Approver-2\"\n  },\n  \"output_fields\": \"status\"\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c09cb4e9-cbb4-449a-9e59-180396e6b66a",
+      "name": "Update Desc (App 1 Selesai)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        15536,
+        11712
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Knox JIT Webhook').item.json.body.status }}",
+                    "rightValue": "active",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c10403c3-85e4-4449-a64c-37d3a01a0c20"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Active"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "1f7aa0da-c624-452f-aaab-7b1579cd9447",
+                    "leftValue": "={{ $('Knox JIT Webhook').item.json.body.status }}",
+                    "rightValue": "expired",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Expired"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        15920,
+        12208
+      ],
+      "id": "f9fc9cf7-3ceb-49fd-a902-82512e82699f",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO n8n_cache (key, value) VALUES ('kc_admin_token', '{{ $json.access_token }}') ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;",
+        "options": {}
+      },
+      "id": "4a2e63e0-cde0-4b96-a951-0fe796f2ae00",
+      "name": "Save New Token",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        15776,
+        12304
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "pa1sGOAL2y9njP4M",
+          "name": "KNOX KC Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.KEYCLOAK_URL }}/realms/{{ $('Global Config').item.json.KEYCLOAK_ADMIN_REALM }}/protocol/openid-connect/token",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "grant_type",
+              "value": "client_credentials"
+            },
+            {
+              "name": "client_id",
+              "value": "={{ $('Global Config').first().json.KEYCLOAK_CLIENT_NAME }}"
+            },
+            {
+              "name": "client_secret",
+              "value": "={{ $('Global Config').first().json.KEYCLOAK_CLIENT_SECRET }}"
+            },
+            {
+              "name": "scope",
+              "value": "openid"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4b0480f9-b2d2-45f5-ae44-0af06398b6f4",
+      "name": "Get New KC Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        15616,
+        12304
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.isValid }}",
+                    "rightValue": "false",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "bd622650-a8aa-4d03-8e4f-a86261769b36"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Valid"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "8e5336e3-cbec-4518-aefb-cc84787715a0",
+                    "leftValue": "={{ $json.isValid }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "false",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Invalid"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "650eed71-fbe5-41c7-8d88-8ab7779ea7b6",
+      "name": "Check Token Validation",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        15440,
+        12224
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8e3b3a7d-d4a9-402a-89a3-f0a99c9c8901",
+              "name": "isValid",
+              "value": "={{ !!$json.preferred_username }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7e9c7f57-9c6b-43f0-b83b-937422059f82",
+      "name": "Evaluate Token",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        15248,
+        12224
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Global Config').item.json.KEYCLOAK_URL }}/realms/{{ $('Global Config').item.json.KEYCLOAK_ADMIN_REALM }}/protocol/openid-connect/userinfo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + ($json.token || 'empty_token') }}"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "da6f0115-ab77-49fd-9611-d79da1380b56",
+      "name": "Check Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        15040,
+        12224
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT value AS token FROM n8n_cache WHERE key = 'kc_admin_token';",
+        "options": {}
+      },
+      "id": "8c205eec-bdb1-4e4d-85f3-d1a1a90ec7f2",
+      "name": "Read Existing Token",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        14832,
+        12224
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "pa1sGOAL2y9njP4M",
+          "name": "KNOX KC Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Global Config').item.json.ITOP_URL }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "version",
+              "value": "1.3"
+            },
+            {
+              "name": "auth_user",
+              "value": "={{ $('Global Config').first().json.ITOP_USER }}"
+            },
+            {
+              "name": "auth_pwd",
+              "value": "={{ $('Global Config').first().json.ITOP_PASS }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{\n JSON.stringify({\n  \"operation\": \"core/update\",\n  \"class\": $('Global Config').first().json.ITOP_CLASS,\n  \"comment\": \"Akses JIT Expired, tiket ditutup dan peran akan dicabut.\",\n  \"key\": \"SELECT \" + $('Global Config').first().json.ITOP_CLASS + \" WHERE description LIKE \\'%\" + $('Knox JIT Webhook').first().json.body.ticket_id + \"%\\' AND description LIKE \\'%\" + $('Knox JIT Webhook').first().json.body.ticket_number + \"%\\'\",\n  \"fields\": {\n    \"status\": \"closed\"\n  },\n  \"output_fields\": \"status\"\n})\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "38ea490c-4dcd-46c3-b839-1891803dcc5a",
+      "name": "Close iTop Ticket (Expired)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        17360,
+        12384
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Vars (Expired)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Expired)').first().json.realm }}/clients?clientId={{ $('Set Vars (Expired)').first().json.client_name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Expired)').first().json.token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5465fe30-ad77-4a99-96dd-317f1d7da20e",
+      "name": "Get Client UUID (Expired)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16368,
+        12384
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Vars (Expired)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Expired)').first().json.realm }}/users?email={{ $('Set Vars (Expired)').first().json.user_email }}&exact=true",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Expired)').first().json.token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a0540b88-1703-4460-9b83-a80d60d0d7e2",
+      "name": "Get User ID (Expired)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16560,
+        12384
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Vars (Expired)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Expired)').first().json.realm }}/clients/{{ $('Get Client UUID (Expired)').first().json.id }}/roles/{{ $('Set Vars (Expired)').first().json.role_name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Expired)').first().json.token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5f3e9452-dc84-4f9c-8e5e-9fb63d1132cd",
+      "name": "Get Role JSON (Expired)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16768,
+        12384
+      ]
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "={{ $('Set Vars (Expired)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Expired)').first().json.realm }}/users/{{ $('Get User ID (Expired)').first().json.id }}/role-mappings/clients/{{ $('Get Client UUID (Expired)').first().json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Expired)').first().json.token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ [$json] }}",
+        "options": {}
+      },
+      "id": "304cd5dc-d636-4223-a55e-ef0378f04647",
+      "name": "Revoke Role (Expired)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16960,
+        12384
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Vars (Expired)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Expired)').first().json.realm }}/users/{{ $('Get User ID (Expired)').first().json.id }}/logout",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Expired)').first().json.token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "50f39241-1f2e-4f22-bf58-321520633214",
+      "name": "Logout User (Expired)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        17168,
+        12384
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Vars (Active)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Active)').first().json.realm }}/clients?clientId={{ $('Set Vars (Active)').first().json.client_name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Active)').first().json.token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "25bceb8b-6781-4a90-8a17-d77c92a696d2",
+      "name": "Get Client UUID (Active)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16368,
+        12192
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let validToken = \"\";\n\ntry {\n  // Coba ambil token baru (jika lewat jalur get new token)\n  validToken = $(\"Get New KC Token\").first().json.access_token;\n} catch (error) {\n  // Jika error (karena node tidak dieksekusi), ambil token lama dari DB\n  validToken = $(\"Read Existing Token\").first().json.token;\n}\n\nconst webhook = $(\"Knox JIT Webhook\").first().json.body;\nconst config = $(\"Global Config\").first().json;\n\nfor (const item of $input.all()) {\n  item.json.token = validToken;\n  item.json.role_name = webhook.access_type + \":\" + webhook.workflow_id;\n  item.json.user_email = webhook.user_requestor;\n  item.json.client_name = config.KEYCLOAK_CLIENT_NAME;\n  item.json.realm = config.KEYCLOAK_ADMIN_REALM;\n  item.json.kc_url = config.KEYCLOAK_URL;\n}\n\nreturn $input.all();"
+      },
+      "id": "dea03192-4ecd-44a7-9eb6-3828f2bc5fad",
+      "name": "Set Vars (Expired)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16176,
+        12384
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let validToken = \"\";\n\ntry {\n  // Coba ambil token baru (jika lewat jalur get new token)\n  validToken = $(\"Get New KC Token\").first().json.access_token;\n} catch (error) {\n  // Jika error (karena node tidak dieksekusi), ambil token lama dari DB\n  validToken = $(\"Read Existing Token\").first().json.token;\n}\n\nconst webhook = $(\"Knox JIT Webhook\").first().json.body;\nconst config = $(\"Global Config\").first().json;\n\nfor (const item of $input.all()) {\n  item.json.token = validToken;\n  item.json.role_name = webhook.access_type + \":\" + webhook.workflow_id;\n  item.json.user_email = webhook.user_requestor;\n  item.json.client_name = config.KEYCLOAK_CLIENT_NAME;\n  item.json.realm = config.KEYCLOAK_ADMIN_REALM;\n  item.json.kc_url = config.KEYCLOAK_URL;\n}\n\nreturn $input.all();"
+      },
+      "id": "f2e79623-ded5-4042-a7ef-b1b752c7c45a",
+      "name": "Set Vars (Active)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16176,
+        12192
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Vars (Active)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Active)').first().json.realm }}/clients/{{ $('Get Client UUID (Active)').first().json.id }}/roles/{{ $('Set Vars (Active)').first().json.role_name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Active)').first().json.token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "92ea7ac7-99b5-42de-88a0-72c3bf38a8d9",
+      "name": "Check Role Exists (Active)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16576,
+        12192
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "cond-200",
+                    "leftValue": "={{ $json.clientRole }}",
+                    "rightValue": 200,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Role Exists"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "cond-404",
+                    "leftValue": "={{ $json.clientRole }}",
+                    "rightValue": 404,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Not Exists"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b660a721-6e1f-4ef6-9416-2119e3981598",
+      "name": "Role Exists? (Active)",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        16784,
+        12192
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Vars (Active)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Active)').first().json.realm }}/clients/{{ $('Get Client UUID (Active)').first().json.id }}/roles",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Active)').first().json.token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $('Set Vars (Active)').first().json.role_name }}\",\n  \"description\": \"Dibuat otomatis via n8n JIT\"\n}",
+        "options": {}
+      },
+      "id": "3c1601a2-98f0-459e-bc92-5d77ab9325d6",
+      "name": "Create Role (Active)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16992,
+        12240
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Vars (Active)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Active)').first().json.realm }}/users?email={{ $('Set Vars (Active)').first().json.user_email }}&exact=true",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Active)').first().json.token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c8b21a24-cf16-4c6e-8ec9-e4bfa4712872",
+      "name": "Get User ID (Active)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        17184,
+        12176
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Vars (Active)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Active)').first().json.realm }}/clients/{{ $('Get Client UUID (Active)').first().json.id }}/roles/{{ $('Set Vars (Active)').first().json.role_name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Active)').first().json.token }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11f6b651-d42b-4e47-9b6b-16bc0128e855",
+      "name": "Get Role JSON (Active)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        17392,
+        12176
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Vars (Active)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Active)').first().json.realm }}/users/{{ $('Get User ID (Active)').first().json.id }}/role-mappings/clients/{{ $('Get Client UUID (Active)').first().json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Active)').first().json.token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ [$json] }}",
+        "options": {}
+      },
+      "id": "fff96509-ef13-43fe-ade2-8fdcb3a124ad",
+      "name": "Assign Role (Active)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        17600,
+        12176
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Vars (Active)').first().json.kc_url }}/admin/realms/{{ $('Set Vars (Active)').first().json.realm }}/users/{{ $('Get User ID (Active)').first().json.id }}/logout",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Set Vars (Active)').first().json.token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1d3bf17-208f-4e84-ab9a-3c08d93b96be",
+      "name": "Logout User (Active)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        17808,
+        12176
+      ]
+    }
+  ],
+  "connections": {
+    "Switch by JIT Status": {
+      "main": [
+        [
+          {
+            "node": "Create iTop Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "iTop Update (Resolved)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "iTop Update (Canceled)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "iTop Update (Canceled)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Existing Token",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Existing Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create iTop Ticket": {
+      "main": [
+        [
+          {
+            "node": "Set App 1 Timeout",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set App 1 Timeout": {
+      "main": [
+        [
+          {
+            "node": "Cek App 1 Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cek App 1 Status": {
+      "main": [
+        [
+          {
+            "node": "Is App 1 Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is App 1 Approved?": {
+      "main": [
+        [
+          {
+            "node": "Update Desc (App 1 Selesai)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reject Knox API1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reject Knox API1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 1m (App 1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1m (App 1)": {
+      "main": [
+        [
+          {
+            "node": "Cek App 1 Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign to App 2": {
+      "main": [
+        [
+          {
+            "node": "Set App 2 Timeout",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set App 2 Timeout": {
+      "main": [
+        [
+          {
+            "node": "Cek App 2 Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cek App 2 Status": {
+      "main": [
+        [
+          {
+            "node": "Is App 2 Resolved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is App 2 Resolved?": {
+      "main": [
+        [
+          {
+            "node": "Approve Knox API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reject Knox API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reject Knox API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 1m (App 2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1m (App 2)": {
+      "main": [
+        [
+          {
+            "node": "Cek App 2 Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approve Knox API": {
+      "main": [
+        []
+      ]
+    },
+    "Reject Knox API": {
+      "main": [
+        [
+          {
+            "node": "iTop Update (Reject App 2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Global Config": {
+      "main": [
+        [
+          {
+            "node": "Switch by JIT Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Knox JIT Webhook": {
+      "main": [
+        [
+          {
+            "node": "Global Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reject Knox API1": {
+      "main": [
+        [
+          {
+            "node": "iTop Update (Reject App 1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Desc (App 1 Selesai)": {
+      "main": [
+        [
+          {
+            "node": "Assign to App 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Set Vars (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Vars (Expired)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save New Token": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get New KC Token": {
+      "main": [
+        [
+          {
+            "node": "Save New Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Token Validation": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get New KC Token",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Evaluate Token": {
+      "main": [
+        [
+          {
+            "node": "Check Token Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Token": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Existing Token": {
+      "main": [
+        [
+          {
+            "node": "Check Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Close iTop Ticket (Expired)": {
+      "main": [
+        []
+      ]
+    },
+    "Get Client UUID (Expired)": {
+      "main": [
+        [
+          {
+            "node": "Get User ID (Expired)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User ID (Expired)": {
+      "main": [
+        [
+          {
+            "node": "Get Role JSON (Expired)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Role JSON (Expired)": {
+      "main": [
+        [
+          {
+            "node": "Revoke Role (Expired)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Revoke Role (Expired)": {
+      "main": [
+        [
+          {
+            "node": "Logout User (Expired)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Logout User (Expired)": {
+      "main": [
+        [
+          {
+            "node": "Close iTop Ticket (Expired)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Client UUID (Active)": {
+      "main": [
+        [
+          {
+            "node": "Check Role Exists (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Vars (Expired)": {
+      "main": [
+        [
+          {
+            "node": "Get Client UUID (Expired)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Vars (Active)": {
+      "main": [
+        [
+          {
+            "node": "Get Client UUID (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Role Exists (Active)": {
+      "main": [
+        [
+          {
+            "node": "Role Exists? (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Role Exists? (Active)": {
+      "main": [
+        [
+          {
+            "node": "Get User ID (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Role (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Role (Active)": {
+      "main": [
+        [
+          {
+            "node": "Get User ID (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User ID (Active)": {
+      "main": [
+        [
+          {
+            "node": "Get Role JSON (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Role JSON (Active)": {
+      "main": [
+        [
+          {
+            "node": "Assign Role (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Role (Active)": {
+      "main": [
+        [
+          {
+            "node": "Logout User (Active)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Knox JIT Webhook": [
+      {
+        "headers": {
+          "host": "n8ninfrasec.example.com",
+          "x-forwarded-for": "192.168.0.20",
+          "x-real-ip": "192.168.0.20",
+          "x-forwarded-proto": "https",
+          "x-forwarded-protocol": "https",
+          "x-forwarded-host": "n8ninfrasec.example.com",
+          "x-forwarded-prefix": "/",
+          "connection": "close",
+          "content-length": "431",
+          "user-agent": "Knox-IAM-Gateway/1.0",
+          "content-type": "application/json",
+          "accept-encoding": "gzip"
+        },
+        "params": {},
+        "query": {},
+        "body": {
+          "access_type": "run",
+          "description": "trstingasfada",
+          "display_name": "O Midiyanto",
+          "jit_duration": "1d 0h 0m",
+          "jit_period_end": "2026-04-18T13:16:00Z",
+          "jit_period_start": "2026-04-17T13:16:00Z",
+          "n8n_team": "admin",
+          "requested_at": "2026-04-17T13:16:55Z",
+          "status": "active",
+          "ticket_id": "db571561-010b-4b25-b1d2-27b4ad278368",
+          "ticket_number": "JIT-20260417-ED65",
+          "user_requestor": "o.midiyanto@example.com",
+          "workflow_id": "y-0C7HXjLTa3Ad7Nc7W3O"
+        },
+        "webhookUrl": "https://n8ninfrasec.example.com/webhook/a1023ab9-c829-4616-8c9e-de97dd6bce0f",
+        "executionMode": "production"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0359a50f82876b654a2d9ea8519bf322ec0d0450707570d929fd6af4c25f4f24"
+  }
+}

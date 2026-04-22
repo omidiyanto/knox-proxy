@@ -11,6 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"knox-proxy/audit"
+
 	"github.com/coreos/go-oidc/v3/oidc"
 	"golang.org/x/oauth2"
 )
@@ -235,6 +237,11 @@ func (a *OIDCAuth) CallbackHandler(w http.ResponseWriter, r *http.Request) {
 		"jit_roles", jitRoles,
 		"keycloak_sid", claims.SessionID,
 	)
+	audit.Log("User authenticated (Login)",
+		"email", claims.Email,
+		"keycloak_sid", claims.SessionID,
+		"assigned_jit_roles", jitRoles,
+	)
 
 	// Redirect to original URL or home page
 	redirectTo := "/"
@@ -251,13 +258,12 @@ func (a *OIDCAuth) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	if sessionID != "" {
 		session := a.sessionMgr.GetSession(sessionID)
 		a.sessionMgr.DestroySession(sessionID)
-		slog.Info("User logged out", "session_id", sessionID,
-			"email", func() string {
-				if session != nil {
-					return session.Email
-				}
-				return "unknown"
-			}())
+		emailToLog := "unknown"
+		if session != nil {
+			emailToLog = session.Email
+		}
+		slog.Info("User logged out", "session_id", sessionID, "email", emailToLog)
+		audit.Log("User logged out", "email", emailToLog, "session_id", sessionID)
 	}
 	a.sessionMgr.ClearSessionCookie(w)
 

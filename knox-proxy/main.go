@@ -18,6 +18,7 @@ import (
 	"knox-proxy/middleware"
 	"knox-proxy/policy"
 	"knox-proxy/proxy"
+	"knox-proxy/audit"
 )
 
 func main() {
@@ -25,6 +26,14 @@ func main() {
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelInfo,
 	})))
+
+	// Initialize Audit Logger
+	if err := audit.Init("audit.log"); err != nil {
+		slog.Error("Failed to initialize audit logger", "error", err)
+	} else {
+		slog.Info("Audit logger initialized, writing to audit.log")
+		audit.Log("Audit System Started")
+	}
 
 	slog.Info("=== KNOX IAM Gateway starting ===")
 

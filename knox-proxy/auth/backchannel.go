@@ -7,6 +7,8 @@ import (
 	"log/slog"
 	"net/http"
 
+	"knox-proxy/audit"
+
 	"github.com/coreos/go-oidc/v3/oidc"
 )
 
@@ -125,6 +127,10 @@ func (h *BackchannelLogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 		destroyed := h.sessionMgr.DestroyByKeycloakSID(claims.SessionID)
 		if destroyed {
 			slog.Info("Backchannel logout: session destroyed successfully",
+				"keycloak_sid", claims.SessionID,
+				"subject", claims.Subject,
+			)
+			audit.Log("Security: Backchannel session destroyed (SSO Logout)",
 				"keycloak_sid", claims.SessionID,
 				"subject", claims.Subject,
 			)

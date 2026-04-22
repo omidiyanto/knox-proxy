@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"knox-proxy/audit"
 	"knox-proxy/middleware"
 )
 
@@ -159,6 +160,13 @@ func (h *Handler) handleRequestJIT(w http.ResponseWriter, r *http.Request) {
 		"access_type", accessType,
 		"duration", ticket.Duration(),
 	)
+	audit.Log("JIT Ticket Requested",
+		"ticket_number", ticket.TicketNumber,
+		"user", user.Email,
+		"workflow_id", req.WorkflowID,
+		"access_type", accessType,
+		"duration", ticket.Duration(),
+	)
 
 	// Fire webhook asynchronously (non-blocking)
 	if h.scheduler != nil {
@@ -301,6 +309,10 @@ func (h *Handler) handleCancelTicket(w http.ResponseWriter, r *http.Request) {
 		"ticket_number", updatedTicket.TicketNumber,
 		"user", user.Email,
 	)
+	audit.Log("JIT Ticket Canceled",
+		"ticket_number", updatedTicket.TicketNumber,
+		"user", user.Email,
+	)
 
 	// Fire webhook to notify external systems of the cancellation
 	if h.scheduler != nil {
@@ -440,6 +452,13 @@ func (h *Handler) handleAdminUpdateStatus(w http.ResponseWriter, r *http.Request
 		"ticket_number", ticket.TicketNumber,
 		"new_status", req.Status,
 		"updated_by", req.UpdatedBy,
+	)
+	audit.Log("JIT Ticket Status Updated (Admin)",
+		"ticket_number", ticket.TicketNumber,
+		"new_status", req.Status,
+		"updated_by", req.UpdatedBy,
+		"workflow_id", ticket.WorkflowID,
+		"ticket_owner", ticket.Email,
 	)
 
 	if h.scheduler != nil {

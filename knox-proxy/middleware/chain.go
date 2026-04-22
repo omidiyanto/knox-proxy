@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"knox-proxy/audit"
 	"knox-proxy/auth"
 	"knox-proxy/policy"
 )
@@ -29,15 +30,32 @@ type RequestUser struct {
 	JITRoles    []string
 }
 
+// userHolder allows the context value to be mutated by downstream handlers
+type userHolder struct {
+	user *RequestUser
+}
+
 // SetUserInContext stores user info in the request context.
 func SetUserInContext(ctx context.Context, user *RequestUser) context.Context {
+	val := ctx.Value(userContextKey)
+	if holder, ok := val.(*userHolder); ok {
+		holder.user = user
+		return ctx // Mutated existing holder, no need to wrap again
+	}
+	// Backward compatible wrap if no holder
 	return context.WithValue(ctx, userContextKey, user)
 }
 
 // GetUserFromContext retrieves user info from the request context.
 func GetUserFromContext(ctx context.Context) *RequestUser {
-	user, _ := ctx.Value(userContextKey).(*RequestUser)
-	return user
+	val := ctx.Value(userContextKey)
+	if holder, ok := val.(*userHolder); ok {
+		return holder.user
+	}
+	if u, ok := val.(*RequestUser); ok {
+		return u
+	}
+	return nil
 }
 
 // ── Logging Middleware ────────────────────────────────────────────────────────
@@ -74,27 +92,16 @@ func Logging(next http.Handler) http.Handler {
 		start := time.Now()
 		wrapped := &statusResponseWriter{ResponseWriter: w, statusCode: http.StatusOK}
 
-		// Capture the final enriched request as it passes through downstream middleware.
-		// Auth middleware enriches the context via r.WithContext(), producing a new
-		// *http.Request. We capture that enriched request here so we can read the
-		// correct user context after ServeHTTP returns.
-		var enrichedReq *http.Request
-		capturingNext := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			enrichedReq = r
-			next.ServeHTTP(w, r)
-		})
+		// Inject a mutable userHolder into the context.
+		// As the request passes through Auth middleware, it will populate this holder,
+		// allowing us to read the correct user when ServeHTTP returns.
+		holder := &userHolder{}
+		ctx := context.WithValue(r.Context(), userContextKey, holder)
+		r = r.WithContext(ctx)
 
-		capturingNext.ServeHTTP(wrapped, r)
+		next.ServeHTTP(wrapped, r)
 
-		// Prefer the enriched request context (has user info injected by Auth middleware).
-		// Fall back to the original request context if no downstream handler ran
-		// (e.g., unauthenticated requests that were rejected before enrichment).
-		logCtx := r.Context()
-		if enrichedReq != nil {
-			logCtx = enrichedReq.Context()
-		}
-
-		user := GetUserFromContext(logCtx)
+		user := holder.user
 		email := "anonymous"
 		if user != nil {
 			email = user.Email
@@ -225,6 +232,12 @@ func Policy(engine *policy.Engine, sanitizer *policy.Sanitizer) func(http.Handle
 						"path", r.URL.Path,
 						"reason", decision.Reason,
 					)
+					audit.Log("Access Denied by Policy",
+						"user", user.Email,
+						"method", r.Method,
+						"path", r.URL.Path,
+						"reason", decision.Reason,
+					)
 				}
 
 				w.Header().Set("Content-Type", "application/json")
@@ -240,6 +253,11 @@ func Policy(engine *policy.Engine, sanitizer *policy.Sanitizer) func(http.Handle
 						"user", user.Email,
 						"path", r.URL.Path,
 						"error", err,
+					)
+					audit.Log("Security: Request body sanitization blocked malicious payload",
+						"user", user.Email,
+						"path", r.URL.Path,
+						"error", err.Error(),
 					)
 					w.Header().Set("Content-Type", "application/json")
 					w.WriteHeader(http.StatusBadRequest)

@@ -123,6 +123,7 @@ services:
       - SESSION_MAX_AGE=${SESSION_MAX_AGE:-3600}
     volumes:
       - ./dangerous-nodes.yaml:/app/dangerous-nodes.yaml:ro
+      - ./audit.log:/app/audit.log
     networks:
       - n8n-net
     depends_on:
